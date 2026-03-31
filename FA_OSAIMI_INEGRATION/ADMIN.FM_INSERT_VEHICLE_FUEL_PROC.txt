@@ -1,0 +1,94 @@
+CREATE OR REPLACE EDITIONABLE PROCEDURE "ADMIN"."FM_INSERT_VEHICLE_FUEL_PROC" (
+    p_plate_number         IN FM_VEHICLE_FUEL_TBL.PLATE_NUMBER%TYPE,
+    p_ownership_type       IN FM_VEHICLE_FUEL_TBL.OWNERSHIP_TYPE%TYPE,
+    p_vehicle_odometer     IN FM_VEHICLE_FUEL_TBL.VEHICLE_ODOMETER%TYPE,
+    p_service_type     IN FM_VEHICLE_SERVICE_TBL.SERVICE_TYPE%TYPE,
+    p_service_date     IN FM_VEHICLE_SERVICE_TBL.SERVICE_DATE%TYPE,
+    p_log_id           IN FM_VEHICLE_SERVICE_TBL.PLATE_NUMBER%TYPE,
+    p_fuel_in_litres       IN FM_VEHICLE_FUEL_TBL.PLATE_NUMBER%TYPE,
+    p_purchase_per_litre   IN FM_VEHICLE_FUEL_TBL.PLATE_NUMBER%TYPE,
+    p_fuel_total_price     IN FM_VEHICLE_FUEL_TBL.PLATE_NUMBER%TYPE,
+    p_vendor_name          IN FM_VEHICLE_FUEL_TBL.VENDOR_NAME%TYPE,
+    p_invoice_number       IN FM_VEHICLE_FUEL_TBL.INVOICE_NUMBER%TYPE,
+    p_invoice_id           IN FM_VEHICLE_FUEL_TBL.PLATE_NUMBER%TYPE,
+    p_last_updated_by      IN FM_VEHICLE_FUEL_TBL.LAST_UPDATED_BY%TYPE DEFAULT '-99',
+    p_last_updated_date    IN FM_VEHICLE_FUEL_TBL.LAST_UPDATED_DATE%TYPE DEFAULT SYSDATE,
+    p_version_number       IN FM_VEHICLE_FUEL_TBL.VERSION_NUMBER%TYPE DEFAULT 1,
+    p_creation_date        IN FM_VEHICLE_FUEL_TBL.CREATION_DATE%TYPE DEFAULT SYSDATE,
+    p_created_by           IN FM_VEHICLE_FUEL_TBL.CREATED_BY%TYPE DEFAULT '-99'
+) AS
+    v_count NUMBER;
+  v_count2 NUMBER;
+BEGIN
+    -- Check if the record already exists based on PLATE_NUMBER and INVOICE_NUMBER
+    SELECT COUNT(*) INTO v_count 
+    FROM ADMIN.FM_VEHICLE_FUEL_TBL
+    WHERE PLATE_NUMBER = p_plate_number
+      AND INVOICE_NUMBER = p_invoice_number;
+
+         SELECT COUNT(*) INTO v_count2 
+    FROM ADMIN.FM_VEHICLE_SERVICE_TBL
+    WHERE PLATE_NUMBER = p_plate_number
+      AND INVOICE_NUMBER = p_invoice_number; 
+  DBMS_OUTPUT.PUT_LINE(TO_NUMBER(p_log_id));
+    -- If no existing record is found, insert the new record
+    IF v_count = 0 THEN
+        INSERT INTO ADMIN.FM_VEHICLE_FUEL_TBL (
+            FUEL_LOG_ID,PLATE_NUMBER, OWNERSHIP_TYPE, VEHICLE_ODOMETER, FUEL_IN_LITRES, 
+            PURCHASE_PER_LITRE, FUEL_TOTAL_PRICE, VENDOR_NAME, INVOICE_NUMBER, 
+            INVOICE_ID, LAST_UPDATED_BY, LAST_UPDATED_DATE, VERSION_NUMBER, 
+            CREATION_DATE, CREATED_BY
+        ) VALUES (
+            TO_NUMBER(p_log_id),p_plate_number, p_ownership_type, p_vehicle_odometer, TO_NUMBER(p_fuel_in_litres), 
+            TO_NUMBER(p_purchase_per_litre),TO_NUMBER(p_fuel_total_price), p_vendor_name, p_invoice_number, 
+            TO_NUMBER(p_invoice_id), p_last_updated_by, p_last_updated_date, p_version_number, 
+            p_creation_date, p_created_by
+        );
+   DBMS_OUTPUT.PUT_LINE('Record inserted successfully in fuel table.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Record already exists in fuel table. No insert performed.');
+    END IF;
+
+
+  IF v_count2 = 0 THEN
+INSERT INTO ADMIN.FM_VEHICLE_SERVICE_TBL (
+    CREATION_DATE,
+    CREATED_BY,
+    PLATE_NUMBER,
+    SERVICE_TYPE,
+    SERVICE_TOTAL_PRICE,
+    SERVICE_DATE,
+    VENDOR_NAME,
+    INVOICE_NUMBER,
+    INVOICE_ID,
+    SERVICE_LOG_ID,
+    LAST_UPDATED_BY,
+    LAST_UPDATED_DATE,
+    VERSION_NUMBER
+) VALUES ( p_creation_date,
+           p_created_by,
+           p_plate_number,
+           p_service_type,
+           TO_NUMBER(p_fuel_total_price),
+           p_service_date,
+           p_vendor_name,
+           p_invoice_number,
+           TO_NUMBER(p_invoice_id),
+           TO_NUMBER(p_log_id),
+           p_last_updated_by,
+           p_last_updated_date,
+           p_version_number);
+
+
+
+        DBMS_OUTPUT.PUT_LINE('Record inserted successfully in service table.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Record already exists in service table. No insert performed.');
+    END IF;
+    commit;
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END FM_INSERT_VEHICLE_FUEL_PROC;
+/
+

@@ -1,0 +1,77 @@
+CREATE OR REPLACE PROCEDURE FM_INSERT_VEHICLE_INFORMATION_PROC(
+    p_plate_number                 IN FM_VEHICLE_INFORMATION_TBL.PLATE_NUMBER%TYPE,
+    p_ownership_type               IN FM_VEHICLE_INFORMATION_TBL.OWNERSHIP_TYPE%TYPE,
+    p_vehicle_status               IN FM_VEHICLE_INFORMATION_TBL.VEHICLE_STATUS%TYPE,
+    p_vehicle_model                IN FM_VEHICLE_INFORMATION_TBL.VEHICLE_MODEL%TYPE,
+    p_door_no                      IN FM_VEHICLE_INFORMATION_TBL.DOOR_NO%TYPE,
+    p_plate_type                   IN FM_VEHICLE_INFORMATION_TBL.PLATE_TYPE%TYPE,
+    p_vehicle_maker                IN FM_VEHICLE_INFORMATION_TBL.VEHICLE_MAKER%TYPE,
+    p_chassis_number               IN FM_VEHICLE_INFORMATION_TBL.CHASSIS_NUMBER%TYPE,
+    p_last_updated_by              IN FM_VEHICLE_INFORMATION_TBL.LAST_UPDATED_BY%TYPE DEFAULT '-99',
+    p_creation_date                IN FM_VEHICLE_INFORMATION_TBL.CREATION_DATE%TYPE DEFAULT SYSDATE,
+    p_created_by                   IN FM_VEHICLE_INFORMATION_TBL.CREATED_BY%TYPE DEFAULT '-99',
+    p_version_number               IN FM_VEHICLE_INFORMATION_TBL.VERSION_NUMBER%TYPE DEFAULT 1,
+    p_assignment_end_date          IN FM_VEHICLE_INFORMATION_TBL.ASSIGNMENT_END_DATE%TYPE DEFAULT NULL,
+    p_assignment_start_date        IN FM_VEHICLE_INFORMATION_TBL.ASSIGNMENT_START_DATE%TYPE DEFAULT NULL,
+    p_user_name                    IN FM_VEHICLE_INFORMATION_TBL.USER_NAME%TYPE,
+    p_lease_contract_id            IN FM_VEHICLE_INFORMATION_TBL.LEASE_CONTRACT_ID%TYPE DEFAULT NULL,
+    p_branch                       IN FM_VEHICLE_INFORMATION_TBL.BRANCH%TYPE,
+    p_activity                     IN FM_VEHICLE_INFORMATION_TBL.ACTIVITY%TYPE,
+    p_vehicle_description          IN FM_VEHICLE_INFORMATION_TBL.VEHICLE_DESCRIPTION%TYPE,
+    p_activity_comments            IN FM_VEHICLE_INFORMATION_TBL.ACTIVITY_COMMENTS%TYPE,
+    p_model_year                   IN FM_VEHICLE_INFORMATION_TBL.MODEL_YEAR%TYPE,
+    p_sequence_number              IN FM_VEHICLE_INFORMATION_TBL.SEQUENCE_NUMBER%TYPE,
+    p_vehicle_color                IN FM_VEHICLE_INFORMATION_TBL.VEHICLE_COLOR%TYPE,
+    p_license_expiry_date          IN FM_VEHICLE_INFORMATION_TBL.LICENSE_EXPIRY_DATE%TYPE DEFAULT NULL,
+    p_inspection_expiration_date   IN FM_VEHICLE_INFORMATION_TBL.INSPECTION_EXPIRATION_DATE%TYPE DEFAULT NULL,
+    p_mvpi_status                  IN FM_VEHICLE_INFORMATION_TBL.MVPI_STATUS%TYPE,
+    p_insurance_status             IN FM_VEHICLE_INFORMATION_TBL.INSURANCE_STATUS%TYPE,
+    p_mobile_number                IN FM_VEHICLE_INFORMATION_TBL.MOBILE_NUMBER%TYPE DEFAULT NULL,
+    p_declaration_form             IN FM_VEHICLE_INFORMATION_TBL.DECLARATION_FORM%TYPE,
+    p_asset_number                 IN FM_VEHICLE_INFORMATION_TBL.ASSET_NUMBER%TYPE,
+    p_cost                         IN VARCHAR2  DEFAULT NULL,
+    p_invoice_num                 IN FM_VEHICLE_INFORMATION_TBL.invoice_num%TYPE, 
+    p_invoice_id                 IN FM_VEHICLE_INFORMATION_TBL.invoice_num%TYPE , 
+    p_po_number                   IN FM_VEHICLE_INFORMATION_TBL.po_number%TYPE, 
+    p_asset_category             IN FM_VEHICLE_INFORMATION_TBL.asset_category%TYPE 
+) AS
+    v_count NUMBER;
+  --    p_cost2        FM_VEHICLE_INFORMATION_TBL.COST%TYPE;
+BEGIN
+
+  --  p_cost2 := TO_NUMBER(p_cost);
+    -- Check if the record already exists based on PLATE_NUMBER
+    SELECT COUNT(*) INTO v_count 
+    FROM ADMIN.FM_VEHICLE_INFORMATION_TBL
+    WHERE PLATE_NUMBER = p_plate_number;
+
+    -- If no existing record is found, insert the new record
+    IF v_count = 0 THEN
+        INSERT INTO ADMIN.FM_VEHICLE_INFORMATION_TBL (
+            PLATE_NUMBER, OWNERSHIP_TYPE, VEHICLE_STATUS, VEHICLE_MODEL, DOOR_NO, 
+            PLATE_TYPE, VEHICLE_MAKER, CHASSIS_NUMBER, LAST_UPDATED_BY, 
+            CREATION_DATE, CREATED_BY, VERSION_NUMBER, ASSIGNMENT_END_DATE, 
+            ASSIGNMENT_START_DATE, USER_NAME, LEASE_CONTRACT_ID, BRANCH, 
+            ACTIVITY, VEHICLE_DESCRIPTION, ACTIVITY_COMMENTS, MODEL_YEAR, 
+            SEQUENCE_NUMBER, VEHICLE_COLOR, LICENSE_EXPIRY_DATE, 
+            INSPECTION_EXPIRATION_DATE, MVPI_STATUS, INSURANCE_STATUS, 
+            MOBILE_NUMBER, DECLARATION_FORM, ASSET_NUMBER, COST, INVOICE_NUM , INVOICE_ID  ,PO_NUMBER , ASSET_CATEGORY
+        ) VALUES (
+            p_plate_number, p_ownership_type, p_vehicle_status, p_vehicle_model, p_door_no, 
+            p_plate_type, p_vehicle_maker, p_chassis_number, p_last_updated_by, 
+            p_creation_date, p_created_by, p_version_number, p_assignment_end_date, 
+            p_assignment_start_date, p_user_name, p_lease_contract_id, p_branch, 
+            p_activity, p_vehicle_description, p_activity_comments, p_model_year, 
+            p_sequence_number, p_vehicle_color, p_license_expiry_date, 
+            p_inspection_expiration_date, p_mvpi_status, p_insurance_status, 
+            p_mobile_number, p_declaration_form, p_asset_number, TO_NUMBER(p_cost),p_invoice_num ,TO_NUMBER(p_invoice_id),p_po_number,p_asset_category
+        );
+        
+        DBMS_OUTPUT.PUT_LINE('Record inserted successfully.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Record already exists. No insert performed.');
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+END FM_INSERT_VEHICLE_INFORMATION_PROC;
