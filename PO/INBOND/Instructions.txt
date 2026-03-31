@@ -1,0 +1,1 @@
+Put po_headers.csv and po_lines.csv in OIC server in path assigned in integration and run integrations
