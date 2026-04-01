@@ -1,0 +1,4 @@
+SELECT
+    dbms_metadata.get_ddl('VIEW', 'MTL_EAM_ASSET_ATTR_VALUES_V', 'APPS')
+FROM
+    dual;

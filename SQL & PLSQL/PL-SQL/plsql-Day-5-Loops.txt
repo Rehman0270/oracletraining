@@ -1,0 +1,504 @@
+LOOPS:
+******
+Loops are useful to execute set of stmts repeatedly.
+In oracle , we have 3 types of loops.
+
+i) simple Loop
+ii) For Loop
+iii) While Loop
+
+1) simple loop
+************
+syn:	LOOP
+	stmt;
+	stmt;
+	:
+	EXIT  WHEN(condition);
+	stmt;
+	stmt;
+	:
+	END LOOP;
+
+
+--No condition check before entering in to the loop
+--Before exit from the loop, it will check condition, 
+   if the condition is  true then loop execution terminates,
+   if the condition fails then loop execution is continue.
+
+2) FOR LOOP
+***********
+syntax:
+	
+FOR   <varname> IN [REVERSE]  firstval..lastval
+	LOOP
+	stmt;
+	stmt;
+	:
+	END LOOP;
+
+Ex:		
+begin
+for x in 1..5
+loop
+dbms_output.put_line(x);
+end loop;
+end;
+
+output:
+1
+2
+3
+4
+5
+
+Ex:		
+begin
+for x in REVERSE 1..5
+loop
+dbms_output.put_line(x);
+end loop;
+end;
+
+OUTPUT:
+5
+4
+3
+2
+1
+
+
+--No condition check before entering in to the loop.
+--The for loop variable need not be declared.
+--IN operator takes the values from first value to last value 
+   from the range
+--Reverse operator enables IN to take the values from 
+   last to first.
+--Range is specified by using ..(dot dot) operator.
+
+
+
+3) WHILE LOOP
+*************
+syntax:
+	WHILE ( cond )
+	LOOP
+	stmt;
+	stmt;
+	:
+	END LOOP;
+
+
+--Condition check before entering into loop.
+--Whenever the condition is FALSE then loop will be terminated.
+
+
+Ex:	
+write a procedure to display the sequential of values from 
+1 to 10 using above loops?
+
+
+	create or replace procedure proc_seqnos is
+
+	x	int:=1;
+	begin
+	--x:=1;
+	dbms_output.put_line(' By using  simple loop');
+	dbms_output.put_line('-----------------------');
+
+	loop
+	dbms_output.put_line(x);
+	x:=x+1;
+	exit when(x > 10);
+	end loop;
+	DBMS_OUTPUT.PUT_LINE(' END  OF SIMPLE LOOP');
+	DBMS_OUTPUT.PUT_LINE('  ');
+	
+	dbms_output.put_line(' By using for loop');
+	dbms_output.put_line('-----------------------');
+
+	for y in 1..10
+	loop
+	dbms_output.put_line(y);
+	end loop;
+	DBMS_OUTPUT.PUT_LINE(' END  OF FOR LOOP');
+	DBMS_OUTPUT.PUT_LINE('  ');
+	
+--Display reverse numbers from 10 to 1 using For Loop
+
+	dbms_output.put_line(' By using for loop , Displaying 1 to 10 values in reverse');
+	dbms_output.put_line('-----------------------------------------------------------');
+
+	for y in REVERSE 1..10
+	loop
+	dbms_output.put_line(y);
+	end loop;
+
+	DBMS_OUTPUT.PUT_LINE(' END  OF FOR LOOP');
+	DBMS_OUTPUT.PUT_LINE('  ');
+
+dbms_output.put_line( ' current value of x: ' || x);
+
+
+	dbms_output.put_line(' By using while loop');
+	dbms_output.put_line('-----------------------');
+	dbms_output.put_line(' Current value of x is :  '||x);
+	dbms_output.put_line(' I want to start from x=1 again, so reassign its value');
+	x:=1;
+dbms_output.put_line( ' New value of x: ' || x);
+	
+while(x<=10)
+	loop
+	dbms_output.put_line(x);
+	x:=x+1;
+	end loop;
+
+	DBMS_OUTPUT.PUT_LINE(' END  OF WHILE LOOP');
+	end proc_seqnos;
+
+
+Ex:	
+
+write a procedure to display  even numbers from given number 
+to given number? 
+
+create or replace procedure proc_even
+(a int,  b  int)
+is
+r int;
+x int;
+y int;
+begin
+x:=a;
+y:=b;
+if(x <= y) then
+dbms_output.put_line
+(' EVEN NUMBERS FROM  '||x||' TO '||y);
+dbms_output.put_line
+('************************************');
+while (x<=y)
+loop
+select mod(x,2) into r from dual;
+if(r=0) then
+dbms_output.put_line('Even-'||x);
+end if;
+x:=x+1;
+end loop;
+else
+dbms_output.put_line(' Invalid Range ');
+end if;
+end proc_even;
+
+
+
+Ex:	
+write a procedure to insert  radius, pi value and area values 
+into the table "circle" ,for the radius range 1 to 20?	
+
+	create table circle
+	(
+	radius number(2),
+	pi number(3,2),
+	area number(6,2)
+	);
+
+	create or replace procedure proc_circle_area 
+	is
+	pi constant number(3,2):=3.14;
+	a number(7,2);
+	begin
+	for r in 1..20
+	loop
+	a:=pi*r*r;
+	insert into circle values(r,pi,a);
+	end loop;
+        COMMIT;
+	dbms_output.put_line
+(' Inserting records is completed. ,'||chr(10)||
+' Please check the table - circle -');
+	end proc_circle_area;
+	
+
+sample output:
+
+exec proc_circle_area;
+
+select * from circle;
+
+
+
+
+anonymous block completed
+    RADIUS         PI       AREA
+---------- ---------- ----------
+         1       3.14       3.14 
+         2       3.14      12.56 
+         3       3.14      28.26 
+         4       3.14      50.24 
+         5       3.14       78.5 
+         6       3.14     113.04 
+         7       3.14     153.86 
+         8       3.14     200.96 
+         9       3.14     254.34 
+        10       3.14        314 
+
+ 10 rows selected 
+
+
+	
+
+Ex:	
+write a procedure to display reverse number for the given 
+number?
+
+
+create or replace procedure proc_revno(n  number)
+is
+rn  number;
+begin
+for x in reverse 1..length(n)
+loop
+rn:=rn||substr(n,x,1);
+end loop;
+dbms_output.put_line(' Given number= '||n);
+dbms_output.put_line(' Reverse number= '||rn);
+end proc_revno;
+
+
+ n	1..length(n)   x	substr(n,x,1)	rn||substr(n,x,1)		rn
+
+6329	1..4	       4	substr(6329,4,1)	  ||9			9
+6329	1..3	       3	substr(6329,3,1)	  9||2			92
+6329	1..2	       2	substr(6329,2,1)	  92||3			923
+6329	1..1	       1	substr(6329,1,1)	  923||6			9236				
+
+Ex:
+
+create or replace procedure proc_emps
+(vjob  emp.job%type)
+as
+--vrec  emp%rowtype;
+begin
+for r in (select * from emp where job=vjob)
+loop
+dbms_output.put_line
+(r.empno||' '||r.ename||' '||r.sal||' '||r.job||' '||r.hiredate||
+' '||r.deptno);
+end loop;
+end proc_emps;
+	
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+		
+
+CASE statement:
+**************
+The CASE statement begins with the keyword CASE. 
+The keyword is followed by a selector.
+The selector is followed by one or more WHEN clauses, 
+which are checked sequentially.
+The value of the selector determines which clause is executed. 
+If the value of the selector equals the value of a WHEN-clause expression, 
+that WHEN clause is executed.
+
+The ELSE clause works similarly to the ELSE clause in an IF statement. 
+In the last example, if the grade is not one of the choices covered by a 
+WHEN clause, the ELSE clause is selected, and the phrase 'No such grade' 
+is output. The ELSE clause is optional. 
+However, if you omit the ELSE clause, PL/SQL adds the following 
+implicit ELSE clause:
+
+ELSE RAISE CASE_NOT_FOUND;
+
+If the CASE statement selects the implicit ELSE clause, 
+PL/SQL raises the predefined exception CASE_NOT_FOUND. 
+So, there is always a default action, even when you omit the ELSE clause.
+
+
+The CASE statement has the following form:
+
+
+
+Syntax:
+---------
+CASE selector
+   WHEN expression1 THEN
+	sequence_of_statements1;
+	...
+   WHEN expression2 THEN 
+	sequence_of_statements2;
+   	...
+   WHEN expressionN THEN 
+	sequence_of_statementsN;
+	...
+  [ELSE 
+	sequence_of_statements]
+END CASE;
+
+
+Example:
+write a program to display meaning of a given grade from A/B/C/D/F?
+	
+declare 
+grade   char;
+begin
+grade:='&grade';
+CASE  grade
+   WHEN 'A' THEN 
+      dbms_output.put_line('Excellent');
+   WHEN 'B' THEN 
+      dbms_output.put_line('Very Good');
+   WHEN 'C' THEN 
+       dbms_output.put_line('Good');
+   WHEN 'D' THEN 
+         dbms_output.put_line('Fair');
+   WHEN 'F' THEN 
+        dbms_output.put_line('Poor');
+   END CASE;
+exception
+when case_not_found then
+dbms_output.put_line
+(' Invalid grade value entered,
+Enter any grade value from A B C D F');
+END;
+
+
+An alternative to the CASE statement is the CASE expression, 
+where each WHEN clause is an expression.
+
+Searched CASE Statement:-
+
+PL/SQL also provides a searched CASE statement, which has the form:
+
+
+CASE
+   WHEN search_condition1 THEN sequence_of_statements1;
+   WHEN search_condition2 THEN sequence_of_statements2;
+   ...
+   WHEN search_conditionN THEN sequence_of_statementsN;
+  [ELSE sequence_of_statementsN+1;]
+END CASE;
+
+The searched CASE statement has no selector. 
+Also, its WHEN clauses contain search conditions that yield a Boolean value, not expressions that can yield a value of any type. An example follows:
+
+CASE 
+   WHEN grade = 'A' THEN dbms_output.put_line('Excellent');
+   WHEN grade = 'B' THEN dbms_output.put_line('Very Good');
+   WHEN grade = 'C' THEN dbms_output.put_line('Good');
+   WHEN grade = 'D' THEN dbms_output.put_line('Fair');
+   WHEN grade = 'F' THEN dbms_output.put_line('Poor');
+   ELSE dbms_output.put_line('No such grade');
+END CASE;
+
+
+Ex:
+write a procedure to return emp job grade based on his salary range
+from given empid?
+
+if sal <1000     grade  'lower'
+
+if sal >=1000 and sal<=3000  then  grade    "Medium"
+
+if sal >3000 and  sal <=5000   then  grade   "Higher"
+
+if  sal > 5000   then  grade is   "Gazitted "
+
+   
+
+
+Ex:  write a procedure to display number of selected products available?
+
+create or replace procedure proc_prod_count( ch in int, cnt out int)
+is
+begin
+case 
+when ch=1 then  
+select count(*) into cnt from prod_dtls where pname='Mobile';
+when ch=2 then
+select count(*) into cnt from prod_dtls where pname='smart phone';
+when ch=3 then
+select count(*) into cnt from prod_dtls where pname='laptop';
+else
+dbms_output.put_line(' Invalid selection');
+end case;
+end proc_prod_count;
+
+
+
+declare
+ch int;
+cnt     int;
+begin
+dbms_output.put_line(' Select your choice from below ');
+dbms_output.put_line('--------------------------------');
+dbms_output.put_line('Enter 1 for Mobile availability');
+dbms_output.put_line('Enter 2 for Smart Phone availability');
+dbms_output.put_line('Enter 3 for laptop availability');
+ch:=&ch;
+proc_prod_count(ch,cnt);
+dbms_output.put_line(' selected choice='||ch);
+dbms_output.put_line(' Available count= '||cnt);
+end;
+----------------------------------------------------------------------------------------
+--> write a procedure to calculate final bill amount
+     based on given prod code and qty
+     and calculate discount on the total bill ,based on below range
+     
+--discount is calculated based on the following
+10000  to 20000     10%
+20001   to 30000    20%
+30001   to  40000   30%
+40001  to   50000   40%
+
+<10000 or  > 50000 no discount
+
+
+create or replace procedure billamount
+(
+vpcode  prod_dtls.prod_code%type,
+qty       int
+)
+is
+vprice   number;
+totalamount    number;
+vdisc   number;
+billpay   number;
+begin
+select cost into vprice from prod_dtls
+where prod_code=vpcode;
+totalamount:=qty*vprice;
+-- calculating discount
+CASE 
+when totalamount>=10000 and totalamount<=20000 then
+vdisc:=0.1*totalamount;
+billpay:=totalamount-vdisc;
+when totalamount>=20001 and totalamount<=30000 then 
+vdisc:=0.2*totalamount;
+billpay:=totalamount-vdisc;
+when totalamount>=30001 and totalamount<=40000 then
+vdisc:=0.3*totalamount;
+billpay:=totalamount-vdisc;
+when totalamount>=40001 and totalamount<=50000 then
+vdisc:=0.4*totalamount;
+billpay:=totalamount-vdisc;
+ELSE
+VDISC:=0;
+BILLPAY:=TOTALAMOUNT-VDISC;
+end case;
+dbms_output.put_line
+(chr(10)||
+'product code:    '||vpcode||chr(10)||
+'quantity:        '||qty||chr(10)||
+'Total amount:   '||totalamount||chr(10)||
+'Discount:     '||VDISC||chr(10)||
+'Bill payment:    '||BILLPAY
+);
+end billamount;
+
+
+
+
+

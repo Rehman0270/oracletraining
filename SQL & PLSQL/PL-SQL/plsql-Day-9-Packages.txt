@@ -1,0 +1,246 @@
+			PACKAGES
+			*********
+
+ 
+Package is a data base object.
+It is useful to group related objects logically.
+It will reduce search time for required procedure or function.
+Packages also reduce disk I/O Operations , 
+by loading all objects into buffer area.
+
+
+Package has 2 parts.
+These parts are created separately.
+
+1) package specification:
+*********************
+It contains procedure and function calling stmts 
+and also variables. 
+
+
+syn-1:	package specification
+
+	create or replace package <pkg_name> 
+	AS
+	<variable declarations>;
+	PROCEDURE <procedure calling stmts>;
+	FUNCTION    <function calling stmts>;
+	end <pkg_name>;
+	/ [ to compile package ]
+
+
+ 
+2) package body
+**************
+It contains procedure and functions definitions.
+
+syn-2:	package body
+
+	create or replace package body <pkg_name> 
+	IS
+	
+Procedure  <proc-1-name> (.....)
+is
+	--
+	--
+end <proc-1>;
+	
+Procedure  <proc-2-name> (.....)
+	
+is
+	--
+	--
+end <proc-2>;
+
+Function  <func-1>(.....)
+return <datatype>
+is
+	--
+	--
+end <func-1>;
+
+end <pkg_name>;
+/ [ to compile package body ]
+
+
+
+Ex:	
+write a package which contains the procedures and functions to 
+calculate sal, bonus, final salaries for given empid , for all emps 
+and for given job category employees?
+
+	CREATE OR REPLACE PACKAGE emppkg
+	 AS
+	PROCEDURE PROC_EMP_FSAL
+	(VENO EMP.EMPNO%TYPE);
+	PROCEDURE PROC_EMPs_Fsal;
+	PROCEDURE PROC_EMPs_FSAL_JOB
+	(vjob emp.job%type);
+	FUNCTION  FUNC_bonus(S EMP.SAL%TYPE)
+	RETURN NUMBER;
+	END emppkg;
+
+	/
+
+	package created.
+
+
+EX:package body
+
+	CREATE OR REPLACE PACKAGE BODY emppkg
+	IS 
+	
+	/* PROC_EMP_FSAL  */
+
+	Procedure proc_emp_fsal(veno emp.empno%type)
+	is
+	vsal emp.sal%type;
+	b number(7,2);
+	fsal number(7,2);
+	begin
+	select sal into vsal from emp where empno=veno;
+	b:=func_bonus(vsal); /* function calling stmt */
+	fsal:=vsal+b;
+	dbms_output.put_line(' The salary details of  '||veno);
+	dbms_output.put_line('----------------------------------------------------');
+	dbms_output.put_line('salary       bonus        final salary');
+	dbms_output.put_line(  vsal||'       '||b||'        '||fsal);
+	end proc_emp_fsal;
+
+
+	/* function to calcualte the BONUS */
+
+	Function func_bonus(s emp.sal%type)
+	return number
+	is
+	bonus number(7,2);
+	begin
+	if (s<1000) then
+	bonus:=0.02*s;
+	end if;
+	if (s>=1000 and s<2000) then
+	bonus:=0.05*s;
+	end if;
+	if (s>=2000 and s<3000) then
+	bonus:=0.10*s;
+	end if;
+	if (s>=3000 and s<5000) then
+	bonus:=0.20*s;
+	end if;
+	if (s>=5000) then
+	bonus:=0.25*s;
+	end if;
+	return(bonus);
+	end func_bonus;
+
+	/* Procedure to display the sal info of all emps */
+
+	Procedure proc_emps_fsal
+	is
+	cursor c is select empno,sal from emp;
+	veno emp.empno%type;
+	vsal emp.sal%type;
+	b number(7,2);
+	fsal number(7,2);
+	begin
+	open c;
+	
+	dbms_output.put_line
+('----------------------------------------------------');
+	dbms_output.put_line
+('salary        bonus        final salary');
+	dbms_output.put_line
+('*************************************************');	
+	loop
+	fetch c into veno,vsal;
+	dbms_output.put_line(' The salary details of  '||veno);
+	b:=func_bonus(vsal); /* function calling stmt */
+	fsal:=vsal+b;
+	EXIT WHEN (C%NOTFOUND);
+	dbms_output.put_line(vsal||'       '||b||'         '||fsal);
+	END LOOP;
+	CLOSE C;
+	end proc_emps_fsal;
+
+
+		/* procedure  proc_emps_fsal_job  */
+
+	procedure proc_emps_fsal_job(vjob emp.job%type)  
+	is
+	cursor c is select empno,sal from emp where job=vjob;
+  	vsal emp.sal%type;
+	veno emp.empno%type;
+	incrval number(7,2);
+	fsal number(7,2);
+	begin
+	open c;
+	loop
+	fetch c into veno,vsal;
+	incrval:=func_bonus(vsal);  /* function calling stmt  */
+	fsal:=vsal+incrval;
+	EXIT WHEN c%NOTFOUND;
+	dbms_output.put_line(' sal,incrval,final salary of  '||veno);
+	dbms_output.put_line(vsal||' , '||incrval||' , '||fsal);
+	end loop;
+	close c;
+	end proc_emps_fsal_job;
+
+	END emppkg;
+	
+	/
+
+
+HOW TO EXECUTE A PROCEDURE FROM A PACKAGE?
+
+syn:	exec pkg_name.proc_name(argval, argval......);
+
+Ex:	exec emppkg.proc_emp_fsal(7654);
+
+
+
+How to call function from a package?
+
+select  pkg.func_name() from dual;
+
+
+
+How to delete a package?
+
+drop package  <pkg_name>;
+---------------------------------------------------------------------------
+
+
+Ex:	
+write a procedure to display PRODID,PNAME,COST,DISCOUNT and  final product cost  
+	a)	for the given product-id, 
+	b)	for all products 		
+	c)	given category of products ?
+	
+	The discount is calculated based on following ranges?
+
+	<5000			5%
+	>=5000 & <10000		10%
+	>=10000 & <20000	15%
+	>=20000			20%
+
+
+Ex:	create a package for the above?
+
+
+Ex:	
+write a procedure to display the final amount paid to the 
+customer by adding interest amount for the principal 			amount?
+	Do the above process for given customer id?
+	Do it for all customers?
+	Do it for given type of account holders?
+
+The interest is calculated based on the following?
+
+<1000			no interest
+>=1000 & < 25000	7.5%
+>=25000 & < 50000	8.00%
+>=50000 & < 100000	9.00%
+>=100000 & <=600000     10.00%
+>600000			Not applicable
+
+--------------------------------------------------------------------------------------------------------				

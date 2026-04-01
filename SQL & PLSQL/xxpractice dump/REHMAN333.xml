@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="WINDOWS-1252" ?>
+<dataTemplate name ="REHMAN222" description="Invoice Detail Report" Version="1.0" >
+<parameters>
+<parameter name="operatingunit" dataType="VARCHAR2"/> 
+<parameter name="p_from_date" dataType="VARCHAR2"/> 
+<parameter name="p_to_date" dataType="VARCHAR2"/> 
+<parameter name="p_trx_number" dataType="VARCHAR2"/> 
+</parameters>
+<dataQuery>
+<sqlStatement name="Q1">
+<![CDATA[
+SELECT
+    m.name                      AS operatingunit,
+    rca.INTERFACE_HEADER_CONTEXT as Source,
+    rca.trx_number              AS trxnumber,
+    rca.trx_date                AS from_date,
+    rca.invoice_currency_code   AS currency,
+    m.name                      AS legalentity,
+    hsa.location                AS location,
+    rcl.line_number             AS num,
+    rcl.description             AS description,
+    rcl.quantity_invoiced       AS quantity,
+    rcl.unit_standard_price     AS unit_price,
+     rca.INTERFACE_HEADER_ATTRIBUTE10 as Transactions
+FROM
+    ra_customer_trx_lines_all      rcl,
+    ra_customer_trx_all            rca,
+    hz_cust_site_uses_all          hsa,
+    hr_operating_units             m
+   
+WHERE
+    m.name = nvl(:operatingunit,m.name)
+    AND rcl.customer_trx_id = rca.customer_trx_id
+    AND rca.bill_to_site_use_id = hsa.site_use_id 
+    AND rca.trx_date between nvl(to_date(:p_from_date,'dd-mon-yyyy'),rca.trx_date ) and  nvl(to_date(:p_to_date,'dd-mon-yyyy'),rca.trx_date) 
+    AND rca.trx_number = nvl(:p_trx_number,rca.trx_number)
+    AND rca.org_id = m.organization_id
+]]>
+</sqlStatement>
+</dataQuery>
+<dataStructure>
+<group name="G_1" source="Q1">
+    <element name="operatingunit"      value="operatingunit" />
+	<element name="Source"      value="Source" />
+	<element name="trxnumber"      value="trxnumber" />
+	<element name="from_date"      value="from_date" />
+	<element name="currency"      value="currency" />
+	<element name="legalentity"      value="legalentity" />
+	<element name="location"      value="location" />
+	<element name="num"      value="num" />
+	<element name="description"      value="description" />
+	<element name="quantity"      value="quantity" />
+	<element name="unit_price"      value="unit_price" />
+	<element name="Transactions"      value="Transactions" />
+</group>
+</dataStructure>
+</dataTemplate>

@@ -1,0 +1,618 @@
+		TRIGGERS
+		*********
+TRIGGER is a data base object like a procedure to perform back ground task.
+Triggers are executed automatically without exec statement or calling statement.
+
+Triggers are defined at 3 levels.
+
+
+1) DDL level triggers
+Invoked and executed automatically for any DDL command.
+2) DML level triggers
+Invoked and executed automatically for any DML command.
+3) SESSION level triggers
+Invoked and executed automatically for any session level command.
+c
+
+
+
+DML Level triggers:
+****************
+These are responsible to maintain uniform business data 
+and to maintain audit information of table data.
+
+
+DML triggers are defined at 2 levels.
+1) Row Level trigger
+    It is executed once for each record affected by dml stmt.
+    It will be defined with the stmt "FOR EACH ROW".
+
+2) Statement Level Trigger
+    It is executed only once for each dml stmt 
+    irrespective of number of affected records.
+
+Pseudo Functions:
+***************
+:NEW.colname 
+It can access the new value from the column.
+[  insert & After update  ]
+
+:OLD.colname 
+It can access old value from the column. 
+[ Before update & before delete ]
+
+
+Trigger has 3 parts:
+
+i) Trigger Event:-
+Reason for trigger execution.
+
+ii) Trigger Restriction:-
+It will control trigger execution, that is before or after
+trigger event.
+
+iii)Trigger Action:-
+It is the task of trigger.
+
+
+syntax:	
+	create or replace trigger <trig_name>
+	[before / after]
+	[ insert / update /delete ] 
+	ON  <table name>
+	[FOR EACH ROW]
+	declare
+	------
+	------
+	BEGIN
+	------------
+	------------
+	END <trig_name>;
+	/  [ to compile the trigger in sql * plus ]
+
+	trigger created.
+
+ex:  table
+
+create table employee
+(
+ename  varchar2(20),
+city  varchar2(20)
+);
+
+insert into employee values('Kiran','Delhi');
+insert into employee values('madhu','Delhi');
+insert into employee values('DINESH','HYD');
+insert into employee values('smith','texas');
+insert into employee values('jack','delhi');
+insert into employee values('soumya','DELHI');
+
+select * from employee;
+
+ENAME                CITY               
+-------------------- --------------------
+Kiran                Delhi                
+madhu                Delhi                
+DINESH               HYD                  
+smith                texas                
+
+
+
+Ex:	
+write a trigger to insert or update  the data of employee in 
+upper case?
+
+	[ Generally to maintain uniform data in the business Database ]
+
+	create or replace trigger trig_conversion
+	before
+	insert or update  on employee
+	for each row
+	begin
+	:new.ename:=upper(:new.ename);
+	:new.city:=upper(:new.city);
+	end trig_conversion;
+  
+	/
+
+
+
+Ex:
+
+consider a table customers with columns cname,city,gender and custid. Generate custid values automatically.
+Maintain capital case data in this table.
+
+
+create sequence customerid
+start with 1001;
+
+create table customers
+(
+cname   varchar2(20),
+city    varchar2(20),
+gender  char,
+custid  number(4) default customerid.nextval
+);
+
+create or replace trigger trig_upper
+before insert
+ on customers
+for each row
+begin
+:new.cname:=upper(:new.cname);
+:new.city:=upper(:new.city);
+:new.gender:=upper(:new.gender);
+end trig_upper;
+
+declare
+vcustid   number;
+vcustname  varchar2(20);
+vcustcity  varchar2(20);
+vgender     char;
+begin
+vcustname:='&vcustname';
+vcustcity:='&vcustcity';
+vgender:='&vgender';
+insert into customers(cname,city,gender) values
+(vcustname,vcustcity,vgender);
+select customerid.currval into vcustid
+from dual;
+dbms_output.put_line
+(chr(10)||' welcome to amazon.in Mr. '||vcustname||
+chr(10)||' Your customer id:   '||vcustid);
+end;
+
+
+
+
+
+
+Ex:
+Consider a table customers with columns cname,city,gender,custid.
+Generate customer id values automatically.
+Accept cname,city, gender values from each customer.
+Maintain audit data of customer table .
+
+
+create sequence auditcustid;
+
+create table cust_audit_new
+(
+cname  varchar2(20),
+city      varchar2(20),
+gender  char,
+custsrno    number(4) default auditcustid.nextval,
+status    varchar2(20)  DEFAULT 'REGISTERED',
+OPDT     date   default  sysdate
+);
+
+create or replace trigger trig_audit_new
+before insert on customers
+for each row
+begin
+insert into cust_audit_new(cname,city,gender)
+values(:new.cname,:new.city,:new.gender);
+end trig_audit_new;
+
+--> 
+create table cust_audit_update
+(
+cname    varchar2(20),
+city        varchar2(20),
+gender    char,
+status    varchar2(20) ,
+opdt      date  default sysdate
+);
+
+--->
+create or replace trigger trig_audit_update
+before update
+on customers
+for each row
+begin
+insert into cust_audit_update(cname,city,gender,status)
+values
+(:old.cname,:old.city,:old.gender,'Before Update');
+insert into cust_audit_update(cname,city,gender,status)
+values
+(:new.cname,:new.city,:new.gender,'After Update');
+end trig_audit_update;
+
+
+--->  
+create table cust_audit_delete
+(
+cname    varchar2(20),
+city        varchar2(20),
+gender    char,
+status    varchar2(20) default  'deleted',
+opdt      date  default sysdate
+);
+
+--->
+create or replace trigger trig_audit_delete
+before delete
+on customers
+for each row
+begin
+insert into cust_audit_delete(cname,city,gender)
+values
+(:old.cname,:old.city,:old.gender);
+end trig_audit_delete;
+
+
+
+insert into customers(cname,city,gender)
+values('niharika','odissa','f');
+insert into customers(cname,city,gender)
+values('swagath','delhi','m');
+
+delete from customers 
+where cname in('MADHU','ANJALI');
+
+update customers 
+set city=decode(cname,'KIRAN','VIZAG',
+                      'FAROOQ','RANCHI')
+WHERE CNAME IN('KIRAN','FAROOQ');
+
+
+
+***************************************************************
+Ex:	
+write a trigger to maintain Audit transaction details 
+of employee table?
+
+--> To maintain new records
+
+create table emp_audit_new
+(
+ename varchar2(20),
+city varchar2(20),
+status varchar2(30) DEFAULT 'REGISTERED',
+regdt date  DEFAULT  SYSDATE
+);
+
+-->Trigger-1
+
+create or replace trigger trig_insert
+before insert
+on employee
+for each row
+begin
+insert into emp_audit_new(ename,city)
+values(:new.ename,:new.city);
+end trig_insert;
+
+
+
+
+	
+-->To maintain updated data
+
+create table emp_audit_update
+(
+ename varchar2(20),
+city varchar2(20),
+status varchar2(30),
+affdt date  DEFAULT  SYSDATE
+);
+
+
+-->Trigger-2
+
+create or replace trigger trig_update
+before update
+on employee
+for each row
+begin
+insert into emp_audit_update(ename,city,status)
+values(:old.ename,:old.city,'Before Update');
+insert into emp_audit_update(ename,city,status)
+values(:new.ename,:new.city,'After Update');
+end trig_update;
+
+
+--> To maintain deleted records
+
+create table emp_audit_delete
+(
+ename varchar2(20),
+city varchar2(20),
+status varchar2(30)  DEFAULT  'CANCELLED',
+ affdt   date  DEFAULT  SYSDATE
+);
+
+
+--Trigger-3
+
+create or replace trigger trig_delete
+before delete
+on employee
+for each row
+begin
+insert into emp_audit_delete(ename,city)
+values(:old.ename,:old.city);
+end trig_delete;
+
+
+
+****************************************************************
+
+Trigger:
+******
+
+
+	create or replace trigger trig_emp_Audit
+	before
+	insert or update or delete  on employee
+	for each row
+	declare
+	opname varchar2(32);
+	BEGIN
+	--For insertions	
+	if  inserting  then
+	insert into emp_audit_new (ENAME,CITY)
+	values
+	(:new.ename,:new.city);
+	end if;
+	--For changes
+	if updating then
+	opname:='Before Update';
+	insert into emp_audit_Update(ename,city,opname)
+	 values
+	(:old.ename,:old.city,opname);
+	opname:='After Update';
+	insert into emp_audit_update(ename,city,opname)
+	 values
+	(:new.ename,:new.city,opname);
+	end if;
+	--For cancellations
+	if deleting  then
+	insert into emp_audit_delete(ename,city)
+	values
+	(:old.ename,:old.city);
+	end if;
+	end trig_emp_Audit;
+
+	/
+
+sample examples:
+
+SQL> select * from employee;
+
+ENAME      CITY
+---------- ----------
+A          CHENNAI
+b          chennai
+s          blore
+X          DALLAS
+Y          TEXAS
+
+SQL> select * from trig_emp2;
+
+ENAM CITY       OPNAME     OPDT
+---- ---------- ---------- ---------
+y    texas      insert     08-JAN-13
+
+SQL> delete from employee where ename='b';
+
+1 row deleted.
+
+SQL> select * from trig_emp2;
+
+ENAM CITY       OPNAME     OPDT
+---- ---------- ---------- ---------
+y    texas      insert     08-JAN-13
+b    chennai    delete     08-JAN-13
+
+SQL> select * from employee;
+
+ENAME      CITY
+---------- ----------
+A          CHENNAI
+s          blore
+X          DALLAS
+Y          TEXAS
+
+
+NOTE:
+system table:	USER_TRIGGERS
+
+It contains the information of triggers created in the database.
+--------------------------------------------------------------------------------------
+
+
+INSTEAD OF triggers:
+******************
+Instead of triggers  are defined on views. 
+A normal DML trigger executes only when a DML operation is 
+issued on a table. 
+Whereas instead of trigger fires when a DML statment is issued on
+the view. 
+Instead-of triggers defined only at row level. 
+
+
+syntax:
+--------
+create or replace trigger <name>
+INSTEAD OF [insert /update/delete ] 
+ON <viewname>
+FOR EACH ROW
+----
+----
+begin
+--
+--
+end <name>;
+/
+
+
+
+Ex:
+consider a view based on emp and dept tables?
+And create a trigger to display error information
+if any insertion on the view?
+
+
+
+ create view vw_emp_dept
+  as
+  SELECT * FROM EMP NATURAL JOIN DEPT;
+
+
+create or replace trigger trig_empdeptview
+	instead of INSERT OR UPDATE OR DELETE
+	on vw_emp_dept
+	for each row
+	begin
+	raise_application_error
+	(-20001,' Data Manipulations are not allowed');
+	end trig_empdeptview;
+
+
+Ex:
+
+create or replace trigger trig_on_vw_cust_info
+	instead of INSERT on cust_act_info
+	for each row
+	begin
+	raise_application_error
+	(-20001,'Insertion is not possible,
+		since it is join view');
+	end trig_on_vw_cust_act;
+
+
+Ex:  INSTEAD OF insert on view , insert into tables
+
+ create table trainers
+  (
+  tid  number(3),
+  tname  varchar2(10)
+  );
+
+-->Table Created.
+
+ insert into trainers
+  values
+  (111,'dinesh');
+ insert into trainers
+  values
+  (222,'durga');
+
+
+
+ create table courses
+  (
+  cid  char(4),
+  cname  varchar2(10)
+  );
+
+
+
+ insert into courses
+  values
+  ('c101','oracle');
+ insert into courses
+  values
+  ('c102','java');
+
+
+
+ alter table trainers
+  add constraint pk_tid_trainers
+  primary key(tid);
+
+
+
+ alter table courses
+  add constraint pk_cid_courses
+  primary key(cid);
+
+
+
+ create table trainers_courses
+  (
+  tid   number(3),
+  cid   char(4),
+  constraint fk_tid_tc foreign key(tid)
+  references trainers(tid),
+  constraint fk_cid_tc foreign key(cid)
+  references courses(cid)
+  );
+
+
+
+ insert into trainers_courses values
+  (111,'c101');
+ insert into trainers_courses values
+  (222,'c102');
+
+
+
+ create view vw_course_info
+  as
+  select t.tid,t.tname,c.cid,c.cname
+  from trainers t, courses c,trainers_courses tc
+  where t.tid=tc.tid
+  and
+  tc.cid=c.cid;
+
+
+View created.
+
+SQL> select * from vw_course_info;
+
+       TID TNAME      CID  CNAME
+---------- ---------- ---- ----------
+       111 dinesh     c101 oracle
+       222 durga      c102 java
+
+SQL> insert into vw_course_info values
+  2  (333,'nagoor','c103','core java');
+insert into vw_course_info values
+*
+ERROR at line 1:
+ORA-01779: cannot modify a column which maps to a non key-preserved table
+
+
+ create or replace trigger trig_insert
+    INSTEAD OF INSERT on vw_course_info
+    for each row
+    begin
+    insert into trainers values
+    (:new.tid,:new.tname);
+    insert into COURSES values
+    (:new.cid,:new.cname);
+    insert into trainers_courses values
+    (:new.tid,:new.cid);
+    end trig_insert;
+  /
+
+
+ insert into vw_course_info values
+  (333,'nagoor','c103','core java');
+
+-- Now check data in the above 3 tables.
+
+Ex: 
+How to display list of trigger names?
+
+select trigger_name from user_triggers;
+
+Ex:  
+Can i alter trigger?
+
+Yes
+
+alter trigger <name>
+disable;
+
+Ex:
+How to delete a trigger?
+
+drop trigger <name>;
+  
+	
+=====================================================
+
+

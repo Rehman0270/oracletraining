@@ -1,0 +1,882 @@
+Ex:
+write a procedure to display number of customers from given
+account type with min bal 20000?
+
+SQL> create or replace procedure proc_cust_cnt
+  2  (vact_type  cust_act_dtls.act_type%type)
+  3  is
+  4  vcnt  int;
+  5  begin
+  6  select count(*) into vcnt
+  7  from cust_act_dtls
+  8  where act_type=vact_type
+  9  and
+ 10  act_bal>=20000;
+ 11  dbms_output.put_line
+ 12  (chr(10)||
+ 13  'Given account type:   '||vact_type||chr(10)||
+ 14  'Number of customers:  '||vcnt
+ 15  );
+ 16  end;
+ 17  /
+Ex: Write a procedure to display the name,sal,job,
+       hiredate,deptno for the given employee id?
+
+	
+create or replace procedure proc_emp( veno emp.empno%type)
+is
+type erec is record(
+		name  emp.ename%type,
+		esal  emp.sal%type,
+		desg  emp.job%type,
+		jdate emp.hiredate%type,
+		dno   emp.deptno%type
+		);
+
+	rec   erec;
+	begin
+	select ename,sal,job,hiredate,deptno into rec
+	from emp where empno=veno;
+	dbms_output.put_line(' Ename='||rec.name);	
+	dbms_output.put_line(' EmpSal='||rec.esal);
+	dbms_output.put_line(' Emp Job Title='||rec.desg);
+	dbms_output.put_line(' Emp join date='||rec.jdate);
+	dbms_output.put_line(' Emp Dept No='||rec.dno);
+	end proc_emp;
+
+
+Advantages:
+
+i) It is reducing the number of declarations of variables.
+ii) It is reducing the amount of memory reserved for Record based variable.
+
+
+
+Ex: Write a procedure to display the name,sal,job,dno,
+      dname,loc for the given employee id?
+
+	create or replace procedure proc_emp_dept( veno emp.empno%type)
+	is
+	type edrec is record(
+				name  emp.ename%type,
+				esal  emp.sal%type,
+				desg  emp.job%type,
+				dno   emp.deptno%type,
+				dname dept.dname%type,
+				city  dept.loc%type
+				);
+
+	r   edrec;		 /* User Defined Record Based Variable */
+	begin
+	select e.ename,e.sal,e.job,e.deptno,d.dname,d.loc into r
+	from emp e , dept d where e.empno=veno and e.deptno=d.deptno;
+	dbms_output.put_line(' Ename=  '||r.name);	
+	dbms_output.put_line(' EmpSal=  '||r.esal);
+	dbms_output.put_line(' Emp Job Title=  '||r.desg);
+	dbms_output.put_line(' Emp Dept No=  '||r.dno);
+	dbms_output.put_line(' Emp dept name=  '||r.dname);
+	dbms_output.put_line(' Emp dept city=  '||r.city);
+	end p_emp_dept;
+
+Ex:	Write a procedure to display the name,cost and warrenty of the product for the given product id?
+
+
+Ex:	Write a procedure to display pname,cost,mfg,exp,companyName,Dealer address,phonenumber
+	for the given product id?
+
+
+Ex:	write a procedure to display customer name, actno,act balance and act name for the given customer id?
+
+create or replace procedure p_cust_act_info( vcid cust_dtls.cno%type)
+	is
+	type custrec is record(
+				cname  cust_dtls.cname%type,
+				actno  cust_act_dtls.actno%type,
+				actname  act_types.act_name%type,
+				bal      cust_act_dtls.act_bal%type
+								);
+
+	rec   custrec;
+	begin
+	select cd.cname,cad.actno,at.act_name,cad.act_bal INTO rec
+	from cust_dtls cd Inner join cust_act_dtls cad
+  ON cd.cno=cad.cust_code
+             Inner Join act_types at
+             ON cad.act_type=at.act_type
+  WHERE cd.cno=vcid;
+             
+	dbms_output.put_line(' Cust name='||rec.cname);	
+	dbms_output.put_line(' Cust Act No='||rec.actno);
+	dbms_output.put_line(' Cust Act Name='||rec.actname);
+	dbms_output.put_line(' Account Bal='||rec.bal);
+		end p_cust_act_info;
+    
+ EX:
+write procedure to display customer name,city,gender,account
+name, balance from given account number?
+
+create or replace procedure proc_cust
+(vactno  cust_act_dtls.actno%type)
+is
+TYPE custtype IS RECORD
+(
+cname  cust_dtls.cname%type,
+city       cust_dtls.city%type,
+gender  cust_dtls.gender%type,
+actname act_types.act_name%type,
+actbal    cust_act_dtls.act_bal%type
+);
+vrec   custtype;
+begin
+select a.cname,a.city,a.gender,b.act_name,
+           c.act_bal
+into  vrec
+from cust_dtls a  inner join cust_act_dtls c
+on 
+c.actno=vactno
+and
+a.cno=c.cno
+      inner join  act_types b
+on c.act_type=b.act_type;
+dbms_output.put_line
+(chr(10)||
+'Account number:     '||vactno||chr(10)||
+'Customer name:      '||vrec.cname||chr(10)||
+'City:                         '||vrec.city||chr(10)||
+'Gender:                    '||vrec.gender||chr(10)||
+'Account Name:        '||vrec.actname||chr(10)||
+'Account Bal:            '||vrec.actbal
+);
+end;
+ 
+
+
+
+-------------------------------------------------------------------------------------
+Control Structures:
+***************
+Generally program stmts are executed sequentially.
+we can change this execution by using control structures.
+In oracle, The control structures are
+
+1) conditional stmts
+2) loops 
+3) case stmt
+
+CONDITIONAL STMTS:
+******************
+we can execute a set of stmts with in a procedure based on 
+condition result.
+The result of a condition is a BOOLEAN value that is either 
+TRUE or  FALSE.
+The conditional statements are used to compare values.
+
+
+1) simple if:
+**********
+	It has only true part. 
+	If the condition is true then it will execute stmts
+	under true block.
+
+syntax:	
+	if (condition) then
+	stmt;
+	stmt;
+	---
+	---
+	end if;
+
+
+2) if -- then-- else
+***************
+It has both true and false parts. 
+If condition is true then it will execute TRUE part and 
+if condition is FALSE then it will execute the ELSE part.
+
+syntax:
+	if (condition) then
+	-----
+	-----
+            ELSE
+	----
+	----
+	end if;
+
+3) COMPOUND IF / Nested IF:
+***********************
+writing if condition in other if condition is known as
+compund if or nested if.
+
+syntax:
+--------
+	if (cond-1) then
+	---
+	---
+	   if (cond-2) then
+	   ---
+	   ---
+	   else
+	   ---
+	   ---
+                 end if; --closing of cond-2
+	else
+	---
+	---
+	end if; --closing of cond-1
+
+4) ELSIF:
+********
+Combining else and if staments together into single stmt.
+In this case,  all if conditions are closed with one END IF.
+Syntax:
+--------
+if (cond-1) then
+--
+--
+elsif(cond-2) then
+--
+--
+elsif(cond-3) then
+--
+--
+else
+--
+--
+end if;
+
+
+
+
+========================================================================================================
+
+--Creating a procedure to display biggest of 2 integers with simple if logic?
+
+
+CREATE OR REPLACE PROCEDURE PROC_BIGINT_1( X INT, Y INT)
+IS
+BEGIN
+DBMS_OUTPUT.PUT_LINE('X='||X||'  '||'Y='||Y);
+IF (X>Y) THEN
+  DBMS_OUTPUT.PUT_LINE('FIRST VALUE IS BIG');
+  END IF;
+     DBMS_OUTPUT.PUT_LINE('end of execution');
+  END PROC_BIGINT_1;
+  
+  EXEC PROC_BIGINT_1(10,20);
+  EXEC PROC_BIGINT_1(100,20);
+
+
+
+--Creating a procedure to display biggest of 2 integers with  if-then-else logic?
+
+
+CREATE OR REPLACE PROCEDURE PROC_BIGINT_2( X INT, Y INT)
+IS
+BEGIN
+DBMS_OUTPUT.PUT_LINE('X='||X||'  '||'Y='||Y);
+IF (X>Y) THEN
+    DBMS_OUTPUT.PUT_LINE('FIRST VALUE IS BIG');
+  else
+  DBMS_OUTPUT.PUT_LINE('Second VALUE IS BIG');
+  END IF;
+     DBMS_OUTPUT.PUT_LINE('end of execution');
+  END PROC_BIGINT_2;  
+  
+  exec proc_bigint_2(20,10);
+  exec proc_bigint_2(100,100);
+  
+
+
+--Creating a procedure to display biggest of 2 integers with  
+Elsif logic?
+
+
+CREATE OR REPLACE PROCEDURE PROC_BIGINT_3( X INT, Y INT)
+IS
+BEGIN
+DBMS_OUTPUT.PUT_LINE('X='||X||'  '||'Y='||Y);
+IF (X>Y) THEN
+    DBMS_OUTPUT.PUT_LINE('FIRST VALUE IS BIG');
+  elsif(x=y) then
+    dbms_output.put_line(' x and y are equal');
+     else
+  DBMS_OUTPUT.PUT_LINE('Second VALUE IS BIG');
+  END IF;
+     DBMS_OUTPUT.PUT_LINE('end of execution');
+  END PROC_BIGINT_3;  
+  
+  exec proc_bigint_3(4,5);
+  exec proc_bigint_3(5,5);
+  exec proc_bigint_3(14,5);
+
+
+
+Ex:	 
+Write a program to display biggest of integers if any 
+one given value is  null?
+
+CREATE OR REPLACE PROCEDURE PROC_BIGINT_4( X INT, Y INT)
+IS
+a int;
+b int;
+BEGIN
+DBMS_OUTPUT.PUT_LINE('X='||X||'  '||'Y='||Y);
+if x is null then
+dbms_output.put_line(' Enter a valid value in the First position');
+else
+a:=x;
+end if;
+if y is null then
+dbms_output.put_line(' Enter a valid value in the second position');
+else
+b:=y;
+end if;
+
+IF (a>b) THEN
+    DBMS_OUTPUT.PUT_LINE('FIRST VALUE IS BIG');
+  elsif(a=b) then
+    dbms_output.put_line(' Values are equal');
+     else
+  DBMS_OUTPUT.PUT_LINE('Second VALUE IS BIG');
+  END IF;
+     DBMS_OUTPUT.PUT_LINE('end of execution');
+  END PROC_BIGINT_4;  
+
+
+ Ex: 
+write a procedure to find out which emp getting less salary
+based on given 2 emp numbers?
+
+create or replace procedure proc_cmp_sal
+(
+veno1  emp.empno%type,
+veno2  emp.empno%type
+)
+IS
+vsal1  number;
+vsal2  number;
+begin
+select sal into vsal1 from emp
+where empno=veno1;
+select sal into vsal2 from emp
+where empno=veno2;
+dbms_output.put_line
+(' Empno-1:  '||veno1||'      Salary:  '||vsal1||chr(10)||
+ ' Empno-2:  '||veno2||'      Salary:  '||vsal2);
+--comparing salaries
+if(vsal1 < vsal2) then
+dbms_output.put_line
+(veno1||' has less salary');
+elsif(vsal1=vsal2) then
+dbms_output.put_line
+('Both has equal salaries');
+else
+dbms_output.put_line
+(veno2||' has less salary');
+end if;
+end proc_cmp_sal;
+
+
+Ex:
+Procedure to insert username,password and mobile number in to a table
+reg_customers. Before insert verify username and password length should
+be min 8-chars and max 12-chars?
+
+
+Create or replace procedure proc_cust_reg
+(
+vusername  reg_customers.username%type,
+vpassword  reg_customers.password%type,  
+vphno  reg_customers.phno%type
+)
+is
+begin
+if (length(vusername)>=8 AND length(vusername)<=12) then
+   if (length(vpassword)>=8 AND length(vpassword)<=12) then
+     insert into reg_customers
+     values(vusername,vpassword,vphno);
+     dbms_output.put_line
+     (' Registered successfully:');
+   else
+      dbms_output.put_line
+      (' Invalid password ');
+   end if;
+else
+  dbms_output.put_line
+  (' username is not valid');
+end if;
+end proc_cust_reg;
+
+
+		
+
+
+Ex:	
+write a procedure to find out which type of customers
+( either male customers or female customers) are less in count, 
+from the given city?
+
+	create or replace procedure proc_Gender_cnt
+	(vcity cust_dtls.city%type)
+	 is
+	v_mcnt int;
+	v_fcnt int;
+	begin
+	select count(*) into v_mcnt from cust_dtls 
+	where city=vcity and gender='M';
+	select count(*) into v_fcnt from cust_dtls 
+	where city=vcity and gender='F';
+	dbms_output.put_line
+	(chr(10)||'Given city Name:- '||vcity||chr(10)||
+	'Male count:- '||v_mcnt||chr(10)||
+	'Female count:- '||v_fcnt);
+	--compare count values
+	if(v_mcnt < v_fcnt) then
+	dbms_output.put_line
+	('Males are less in count than females');
+	elsif(v_mcnt=v_fcnt) then
+	dbms_output.put_line
+	('Males and females are equal in count');
+	else
+	dbms_output.put_line
+	('females are less in count than males');
+	end if;
+	end proc_gender_cnt;
+
+
+EX: 
+write a procedure to find out which account type has
+highest total funds based on given 2 account types?
+
+
+create or replace procedure proc_high_funds
+(
+vact1 cust_act_dtls.act_type%type,
+ vact2 cust_act_dtls.act_type%type
+)
+IS  
+TOT1   NUMBER;
+TOT2   NUMBER;
+BEGIN
+SELECT SUM(ACT_BAL) INTO TOT1 
+FROM CUST_ACT_DTLS 
+WHERE ACT_TYPE=VACT1;
+
+SELECT SUM(ACT_BAL) INTO TOT2 
+FROM CUST_ACT_DTLS 
+WHERE ACT_TYPE=VACT2;
+
+DBMS_OUTPUT.PUT_LINE
+(' FUNDS FROM  '||VACT1||' IS  '||TOT1);
+DBMS_OUTPUT.PUT_LINE
+(' FUNDS FROM  '||VACT2||' IS  '||TOT2);
+IF (TOT1 > TOT2) THEN
+DBMS_OUTPUT.PUT_LINE
+(VACT1||'  HAS HIGHEST FUNDS');
+ELSIF(TOT1 = TOT2) THEN
+DBMS_OUTPUT.PUT_LINE(' BOTH HAVE EQUAL FUNDS ');
+ELSE
+DBMS_OUTPUT.PUT_LINE(VACT2||' HAS HIGHEST FUNDS');
+END IF;
+END PROC_high_FUNDS;
+	
+Ex:
+Find which account has highest bal from 
+given 2 account  numbers?
+
+create or replace procedure proc_high_bal
+(
+actno1  cust_act_dtls.actno%type,
+actno2  cust_act_dtls.actno%type
+)
+is
+bal1  cust_act_dtls.act_bal%type;
+bal2  cust_act_dtls.act_bal%type;
+begin
+select act_bal into bal1 from cust_act_dtls where actno=actno1;
+select act_bal into bal2 from cust_act_dtls where actno=actno2;
+dbms_output.put_line('First Actno:  '||actno1||'     ActBal:   '||bal1);
+dbms_output.put_line('Second Actno:  '||actno2||'     ActBal:   '||bal2);
+if bal1>bal2 then
+dbms_output.put_line('First account has highest balance');
+elsif(bal1=bal2) then
+dbms_output.put_line('Both accounts having equal balance');
+else
+dbms_output.put_line('Second account has highest balance');
+end if;
+end proc_high_bal;
+
+Ex:
+
+create or replace procedure proc_high_sal
+(
+eid1  emp.empno%type,
+eid2  emp.empno%type
+)
+is
+sal1 number;
+sal2 number;
+begin
+select sal into sal1 from emp 
+where empno=eid1;
+select sal into sal2 from emp 
+where empno=eid2;
+dbms_output.put_line
+(
+'EID-1='||eid1 ||' sal= '||sal1||chr(10)||
+'EID-2='||eid2 ||' sal= '||sal2
+);
+if (sal1 > sal2 )
+then
+dbms_output.put_line
+(eid1 ||' getting highest salary');
+elsif(sal1=sal2)
+then
+dbms_output.put_line
+('both are getting equal salary');
+else
+dbms_output.put_line
+(eid2||' getting highest salary');
+end if;
+end proc_high_sal;
+
+ex:
+write a procedure to find out from which city we have more 
+number of customers from given cities?
+
+create or replace procedure proc_high_cust_cnt
+(
+vcity1 cust_dtls.city%type,
+vcity2 cust_dtls.city%type	
+)
+is
+cnt1  int;
+cnt2  int;
+begin
+select count(*) into  cnt1 from cust_dtls
+where city=vcity1;
+select count(*) into  cnt2 from cust_dtls
+where city=vcity2;
+dbms_output.put_line
+(
+' city-1 :  '||vcity1||' cust count:  '||cnt1||chr(10)||
+' city-2 :  '||vcity2||' cust count:  '||cnt2
+);
+if (cnt1>cnt2) then
+dbms_output.put_line
+(vcity1||'  has higher number of customers');
+elsif(cnt1=cnt2) then
+dbms_output.put_line
+('  Equal  number of cusotmers from the cities');
+else
+dbms_output.put_line
+(vcity2||'   has higher number of customers');
+end if;
+end proc_high_cust_cnt; 
+
+ex:
+write a procedure to find out from which city we have 
+more number of customers with given gender, from given cities?
+
+create or replace procedure proc_high_cust_cnt
+(
+vcity1 cust_dtls.city%type,
+vcity2 cust_dtls.city%type,
+vgen  char	
+)
+is
+cnt1  int;
+cnt2  int;
+begin
+select count(*) into  cnt1 
+from cust_dtls
+where city=vcity1 and gender=vgen;
+select count(*) into  cnt2 
+from cust_dtls
+where city=vcity2 and gender=vgen;
+dbms_output.put_line
+(chr(10)||' Gender:  '||vgen||chr(10)||
+' city-1 :  '||vcity1||' cust count:  '||cnt1||chr(10)||
+' city-2 :  '||vcity2||' cust count:  '||cnt2
+);
+if (cnt1>cnt2) then
+dbms_output.put_line
+(vcity1||'  has higher number of Male customers');
+elsif(cnt1=cnt2) then
+dbms_output.put_line
+(' Equal  number of cusotmers from the cities');
+else
+dbms_output.put_line
+(vcity2||'  has higher number of customers');
+end if;
+end proc_high_cust_cnt; 
+
+
+
+Ex:
+	display a message based on balance like
+	INSUFFICIENT FUNDS
+		OR
+	TAKE YOUR MONEY?
+
+create or replace procedure proc_verify_withdrawl
+(
+vactno  cust_act_dtls.actno%type,
+vamt   number
+)
+is
+vbal  number;
+begin
+select act_bal into vbal 
+from cust_act_dtls
+where actno=vacctno;
+if(vbal<=vamt) then
+dbms_output.put_line
+(' Insufficient balance');
+else
+update cust_act_dtls
+set act_bal=act_bal-vamt
+where actno=vactno;
+dbms_output.put_line
+(' take your money');
+end if;
+commit;
+end proc_verify_withdrawl;
+
+-----------------------------------------------------------------------------------------------------------------------------
+Ex: finding less investment for a dept from given 2 deptnos?
+
+create or replace procedure proc_less_fund_dept
+(
+vdno1  emp.deptno%type,
+vdno2  emp.deptno%type
+)
+as
+tot1    number;
+tot2    number;
+begin
+select sum(sal) into tot1 from emp
+where deptno=vdno1;
+select sum(sal) into tot2 from emp
+where deptno=vdno2;
+dbms_output.put_line
+('deptno:  '||vdno1||'  Investment:  '|| tot1||chr(10)||
+' Deptno:  '||vdno2||'  Investment:  '||tot2);
+if (tot1 < tot2) then
+dbms_output.put_line
+(' less investment for deptno: '||vdno1);
+elsif(tot1=tot2) then
+dbms_output.put_line
+(' Investment for depts is equal: '||tot1);
+else
+dbms_output.put_line
+(' less investment for deptno: '||vdno2);
+end if;
+end;
+-----------------------------------------------------------------------------
+Ex:
+--number of products from each company
+--total investement for each company
+--compare which is higher investment
+--FROM GIVEN 2 COMPANY NAMES?
+
+create or replace procedure proc_cmp_investment
+(cmpname1 varchar2,
+ cmpname2  varchar2)
+ IS
+ cmp1count  int;
+ cmp2count  int;
+ cmp1invest  number;
+ cmp2invest  number;
+ BEGIN
+ --getting number of prods and total investment from comp1
+
+select count(*),sum(cost) into cmp1count,cmp1invest
+ from prod_dtls 
+where comp_code=
+ (select comp_code from comp_dtls
+   where comp_name=cmpname1);
+
+--getting number of prods and total investment from comp2
+
+select count(*),sum(cost) into cmp2count,cmp2invest
+ from prod_dtls 
+where comp_code=
+ (select comp_code from comp_dtls
+   where comp_name=cmpname2);
+
+dbms_output.put_line
+(chr(10)||' Compname:  '||cmpname1||chr(10)||
+          ' No. of products:  '||cmp1count||chr(10)||
+          ' Investement:     '||cmp1invest||chr(10)||
+'************************************************'||chr(10)||
+'compname:    '||cmpname2||chr(10)||
+'No. of products:   '||cmp2count||chr(10)||
+'Investment:    '||cmp2invest
+);
+
+--Compare investment
+if (cmp1invest>cmp2invest) then
+dbms_output.put_line
+(chr(10)||' Higher investment for company1:  '||cmpname1);
+elsif (cmp1invest=cmp2invest) then
+dbms_output.put_line
+(chr(10)||' Equal investment for both companies');
+else
+dbms_output.put_line
+(chr(10)||' Higher investment for company2:  '||cmpname2);
+end if;
+end Proc_cmp_investment;
+
+exec proc_cmp_investment('IBM','SAMSUNG');
+
+Ex:
+
+create or replace procedure proc_deposit
+(
+vactno   cust_act_dtls.actno%type,
+vamt     number
+)
+is
+vbal   number;
+begin
+if (vamt < 100 ) then
+dbms_output.put_line
+(' Invalid Amount, Min amount is :  100');
+elsif (vamt >=100  and vamt <=49900) then
+select act_bal into vbal 
+from cust_act_dtls
+where actno=vactno;
+dbms_output.put_line
+(chr(10)|| ' Old Bal:   '||vbal);
+update cust_act_dtls
+set act_bal=act_bal+vamt
+where actno=vactno;
+select act_bal into vbal 
+from cust_act_dtls
+where actno=vactno;
+dbms_output.put_line
+(chr(10)||' depositing amt:   '||vamt);
+dbms_output.put_line
+(chr(10)|| ' New Bal:   '||vbal);
+commit;
+dbms_output.put_line
+(chr(10)|| ' transaction completed successfully');
+else
+dbms_output.put_line
+(chr(10)||' Daily limit exceeded,
+max amount 49900, Transaction cancelled');
+end if;
+end proc_deposit;
+
+
+create or replace procedure proc_cust_cnt
+(
+acttype1   cust_act_dtls.act_type%type,
+acttype2   cust_act_dtls.act_type%type
+)
+is
+vcnt1  int;
+vcnt2  int;
+begin
+select count(*) into vcnt1 
+from cust_act_dtls
+where act_type=acttype1;
+
+select count(*) into vcnt2 
+from cust_act_dtls
+where act_type=acttype2;
+dbms_output.put_line
+(chr(10)||
+'Number of customers from  act type:  '||acttype1||' ='||vcnt1||chr(10)||
+'Number of customers from  act type:  '||acttype2||' ='||vcnt2
+);
+--comparing customer counts
+if (vcnt1 > vcnt2) then
+dbms_output.put_line
+(chr(10)||
+acttype1||' has more number of customers');
+elsif(vcnt1=vcnt2) then
+dbms_output.put_line
+(chr(10)||' Both accounts have equal no of customers');
+else
+dbms_output.put_line
+(chr(10)||
+acttype2||' has more number of customers');
+end if;
+end proc_cust_cnt;
+
+exec proc_cust_cnt('SB','SAL');
+
+Ex:
+write a procedure to calculate customer bill amout, based on 
+prod code and quantity? And display
+prodname, price , total bill, discount amout,bill paid?
+
+create or replace procedure billamount
+(
+prodcode   prod_dtls.prod_code%type,
+qty    int
+)
+is
+vpname  prod_dtls.prod_name%type;
+vprice  number;
+vtotalbill  number;
+vdisc  number;
+billamount  number;
+begin
+select prod_name,cost into vpname,vprice from prod_dtls
+where prod_code=prodcode;
+vtotalbill:=qty*vprice;
+vdisc:=0.1*vtotalbill;
+billamount:=vtotalbill-vdisc;
+dbms_output.put_line
+(chr(10)||' Welcome to ABC sales CORP.'||chr(10)||
+'**********************************'||chr(10)||
+'product name:   '||vpname||chr(10)||
+'prod  qty:      '||qty||chr(10)||
+'Price per unit:  '||vprice||chr(10)||
+'Total Bill:     '||vtotalbill||chr(10)||
+'Discount  :     '||vdisc||chr(10)||
+'---------------------------'||chr(10)||
+'Bill amount:    '||billamount
+);
+end billamount;
+
+
+
+
+
+
+
+
+
+
+
+Ex:	
+write a procedure to find the higher number of customers 
+from the given 2 cities?
+
+Ex:
+write a procedure to find the total balance amount in the 
+given account type?
+
+Ex:
+Write a procedure to display the number of products from the 
+given 2 company names and find out from which 	company we have less number of products?
+
+Ex:
+Write a procedure to display the number of mobile products 
+from the given 2 company names?
+
+Ex:
+Write a procedure to display the total number of customers 
+opted for given account type?
+
+Ex:
+write a procedure to display the higher total funds  from the
+given 3 types of accounts?
+
+
+----------------------------------------------------------------------------------------------
+

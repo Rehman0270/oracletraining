@@ -1,0 +1,186 @@
+SELECT  
+HOU.NAME                                OPERATING_UNIT,------------HR_OPERATING_UNITS LOCATION
+PRHA.SEGMENT1                           requistion_number,--------------PO_REQUISITION_HEADERS_ALL
+PRHA.DESCRIPTION                        DESCRIPTION,---------------PO_REQUISITION_HEADERS_ALL
+PDTA.TYPE_NAME                          TYPE,----------------------po_document_types_all_tl
+PRHA.AUTHORIZATION_STATUS               STATUS,--------------------po_document_types_all_tl
+PAPF.FULL_NAME                          NAME,----------------------PER_ALL_PEOPLE_F
+----po_requisition_headers_pkg.get_req_total(PRHA.requisition_header_id)
+PRLA.LINE_NUM                          LINE,-----------------------PO_REQUISITION_LINES_ALL
+PLT.LINE_TYPE                          TYPE_OF_METERIAL,-----------po_line_types
+PRLA.ITEM_DESCRIPTION                  DISCRIPTION,----------------PO_REQUISITION_LINES_ALL
+MSIB.SEGMENT1                          ITEM_NUMBER,----------------MTL_SYSTEM_ITEMS_B
+PRLA.UNIT_MEAS_LOOKUP_CODE             UOM,------------------------PO_REQUISITION_LINES_ALL
+PRLA.QUANTITY                          QUANTITY,-------------------PO_REQUISITION_LINES_ALL
+PRLA.UNIT_PRICE                        UNIT_PRICE,-----------------PO_REQUISITION_LINES_ALL
+PRLA.NEED_BY_DATE                      NEED_BY_DATE,---------------PO_REQUISITION_LINES_ALL
+PRLA.DESTINATION_TYPE_CODE             DESTINATION,----------------PO_REQUISITION_LINES_ALL
+PAP.FULL_NAME                          REQUESTOR,------------------PER_ALL_PEOPLE_F
+HO.NAME                                ORGANIZATION,---------------HR_OPERATING_UNITS
+HLA.LOCATION_CODE                      LOCATION,-------------------HR_LOCATION_CODE
+HOU2.NAME                              NAME2,----------------------HR_OPERATING_UNITS
+PHA.SEGMENT1                           PO_NUMBER,------------------PO_HEADERS_ALL
+AP.VENDOR_NAME                         SUPPLIER,-------------------AP_SUPPLIERS
+HLA2.LOCATION_CODE                     SHIP_TO,--------------------HR_LOCATIONS_ALL
+PAP2.FULL_NAME                         AGENT_NAME2,----------------PER_ALL_PEOPLE_F
+PHA2.COMMENTS                          DESCRIPTION1,---------------PO_HEADERS_ALL
+PHA2.CREATION_DATE                     CREATION_DATE,--------------PO_HEADERS_ALL
+PDTA2.TYPE_NAME                        TYPE2,----------------------po_document_types_all_tl
+PVS.VENDOR_SITE_CODE                   SITE,-----------------------po_vendor_sites_all
+HLA2.LOCATION_CODE                     LOCATION2,------------------HR_LOCATIONS_ALL
+PHA.AUTHORIZATION_STATUS               STATUS,-------------------------------------PO_HEADERS_ALL
+PHA.CURRENCY_CODE                      CURRENCY,------------------------------------PO_HEADERS_ALL
+PLA.LINE_NUM                           LINE2,---------------------------------------PO_LINES_ALL
+PLT.LINE_TYPE                          METERIAL,----------------------------------- po_line_types_tl
+MSIB.SEGMENT1                          ITEM_NO,-------------------------------------MTL_SYSTEM_ITEMS_B
+PLA.ITEM_DESCRIPTION                   ITEM_DES,------------------------------------PO_LIBNES_ALL
+PLA.UNIT_MEAS_LOOKUP_CODE              UOM,-----------------------------------------PO_LINES_ALL
+PLA.QUANTITY                           QUANTITY,------------------------------------PO_LINES_ALL
+PLA.UNIT_PRICE                         UOM,------------------------------------------PO_LINES_ALL
+RERS.SOURCE                            SUPPLIER2,------------------------------------rcv_enter_receipts_supplier_v
+RERS.EXPECTED_RECEIPT_DATE             RECEIPT_DATE,---------------------------------rcv_enter_receipts_supplier_v
+PAP3.FULL_NAME                         RECIVER_NAME,----------------------------------PER_ALL_PEOPLE_F
+RSL.QUANTITY_SHIPPED                   QUANTITY_SHIPPED,-------------------------------RCV_SHIPMENT_LINES
+RSL.DESTINATION_TYPE_CODE              TYPE,--------------------------------------------RCV_SHIPMENT_LINES
+MSIB2.SEGMENT1                         ITEM3,--------------------------------------------MTL_SYSTEM_ITEMS_B
+RERV.SHIP_TO_LOCATION                  DESCRIPTION,---------------------------------------rcv_enter_receipts_v
+RERV.oe_order_num                      ORDER_NUMBER,--------------------------------------rcv_enter_receipts_v
+RERV.ROUTING_NAME                      ROUTING,--------------------------------------------rcv_enter_receipts_v
+AIA.INVOICE_NUM                        INVOICE,---------------------------------------------AP_INVOICES_ALL
+HOU3.NAME                              NAME ,-----------------------------------------------AP_INVOICES_ALL
+AIA.INVOICE_TYPE_LOOKUP_CODE           INVOICE_TYPE,-----------------------------------------AP_INVOICES_ALL
+PV.VENDOR_NAME                         TRADING_PARTNER,----------------------------------------PO_VENDORS
+PV.SEGMENT1                            SUPPLIER_NUMBER,----------------------------------------PO_VENDORS
+PVS2.VENDOR_SITE_CODE                  SUPPLIER_SITE,------------------------------------------- PO_VENDOR_SITES_ALL
+AIA.INVOICE_DATE                        INVOICE_DATE,
+AIA.INVOICE_CURRENCY_CODE               CURRENCY,
+AIA.INVOICE_AMOUNT                      INVOICE_AMOUNT,
+AIA.GL_DATE                             GL_DATE,
+AIA.PAYMENT_CURRENCY_CODE               PAYMENT_CURRENCY_CODE,
+AIA.PAYMENT_CROSS_RATE_DATE             PAYMENT_CROSS_RATE_DATE,
+AIA.DESCRIPTION                         DESCRIPTION3,
+AIA.TERMS_DATE                          TERMS_DATE,
+AT.NAME                                 TERM_NAME,
+IBY.PAYMENT_METHOD_NAME                 PAYMENT_METHOD,
+AIA.PAY_GROUP_LOOKUP_CODE               PAY_GROUP,
+BANK.BANK_ACCOUNT_NAME                  BANK_ACCOUNT_NAME,
+BANK.MASKED_BANK_ACCOUNT_NUM            BANK_ACCOUNT_NUMBER,
+HOU4.NAME                               OPERATING_UNIT,
+PV1.VENDOR_NAME                         TRADING_PARTNER
+FROM
+HR_OPERATING_UNITS                       HOU,
+PO_REQUISITION_HEADERS_ALL               PRHA,
+po_document_types_all_tl                 PDTA,
+po_document_types_all_b                  PDTB, 
+PER_ALL_PEOPLE_F                         PAPF ,
+PO_REQUISITION_LINES_ALL                 PRLA,
+MTL_SYSTEM_ITEMS_B                       MSIB,
+PO_LINE_TYPES                            PLT,
+PER_ALL_PEOPLE_F                         PAP,
+HR_OPERATING_UNITS                       HO,
+HR_LOCATIONS_ALL                         HLA,
+HR_OPERATING_UNITS                       HOU2,
+PO_REQ_DISTRIBUTIONS_ALL                 PRD,
+PO_DISTRIBUTIONS_ALL                     PDA,
+PO_HEADERS_ALL                           PHA,
+AP_SUPPLIERS                             AP,
+HR_LOCATIONS_ALL                         HLA2,
+PER_ALL_PEOPLE_F                         PAP2,
+PO_HEADERS_ALL                           PHA2,
+po_document_types_all_b                  PDTB2,
+po_document_types_all_tl                 PDTA2,
+po_vendor_sites_all                      PVS,
+HR_LOCATIONS_ALL                         HLA3,
+PO_LINES_ALL                             PLA,
+po_line_types_tl                         PLTT,
+rcv_enter_receipts_supplier_v            RERS,
+RCV_TRANSACTIONS                         RCT,
+RCV_SHIPMENT_HEADERS                     RSH,
+RCV_SHIPMENT_LINES                       RSL,
+PER_ALL_PEOPLE_F                         PAP3,
+MTL_SYSTEM_ITEMS_B                       MSIB2,
+rcv_enter_receipts_v                     RERV,    
+ap_invoice_distributions_all             AIDA,
+ap_invoice_payments_all                  aipa,
+AP_INVOICES_ALL                          AIA,
+HR_OPERATING_UNITS                       HOU3,
+PO_VENDORS                               PV,
+PO_VENDOR_SITES_ALL                      PVS2,
+AP_TERMS                                 AT,
+iby_payment_methods_vl                   IBY,
+iby_ext_bank_accounts                    BANK,
+HR_OPERATING_UNITS                       HOU4,
+PO_VENDORS                               PV1
+WHERE  1=1
+AND PRHA.SEGMENT1='16096'                                   
+AND PRHA.ORG_ID='204'
+AND hou.organization_id=PRHA.ORG_ID
+AND PDTB.DOCUMENT_SUBTYPE=PRHA.TYPE_LOOKUP_CODE
+AND PDTB.org_id = PRHA.org_id
+AND PDTB.document_type_code = 'REQUISITION'
+AND PDTB.document_subtype = PRHA.type_lookup_code
+AND PDTB.document_type_code=PDTA.document_type_code
+AND PDTA.org_id = PDTB.org_id
+AND PDTA.DOCUMENT_SUBTYPE='PURCHASE'
+AND PRHA.PREPARER_ID=PAPF.PERSON_ID
+AND SYSDATE BETWEEN PAPF.EFFECTIVE_START_DATE  AND PAPF.EFFECTIVE_END_DATE 
+AND PRHA.REQUISITION_HEADER_ID=PRLA.REQUISITION_HEADER_ID
+AND PRLA.ITEM_ID=MSIB.INVENTORY_ITEM_ID
+AND MSIB.ORGANIZATION_ID=PRHA.ORG_ID
+AND PRLA.LINE_TYPE_ID=PLT.LINE_TYPE_ID
+AND PAP.PERSON_ID=PRLA.TO_PERSON_ID
+AND HO.ORGANIZATION_ID=PRLA.ORG_ID
+AND HLA.LOCATION_ID=PRLA.DELIVER_TO_LOCATION_ID
+AND HOU2.ORGANIZATION_ID=PRLA.DELIVER_TO_LOCATION_ID
+AND PRLA.REQUISITION_LINE_ID=PRD.REQUISITION_LINE_ID    
+AND PRD.DISTRIBUTION_ID=PDA.REQ_DISTRIBUTION_ID
+AND PHA.PO_HEADER_ID= PDA.PO_HEADER_ID
+AND PHA.VENDOR_ID=AP.VENDOR_ID 
+AND HLA2.LOCATION_ID=PHA.SHIP_TO_LOCATION_ID
+AND PAP2.PERSON_ID=PRLA.TO_PERSON_ID
+AND PHA2.PO_HEADER_ID=PDA.PO_HEADER_ID
+AND ( PDTA2.document_type_code IN ('PO','PA'))
+AND PDTB2.document_subtype = PHA2.type_lookup_code
+AND PDTB2.document_type_code = PDTA2.document_type_code
+AND PDTB2.document_subtype = PDTA2.document_subtype
+AND PDTA2.org_id = PDTB2.org_id
+AND PDTB2.org_id = PHA2.org_id
+AND pvs.vendor_site_id = PHA2.vendor_site_id
+AND HLA3.LOCATION_ID=PHA2.SHIP_TO_LOCATION_ID
+AND PLA.PO_HEADER_ID =PHA.PO_HEADER_ID
+AND PLTT.LINE_TYPE_ID=PLA.LINE_TYPE_ID
+AND ( RERS.source_type_code = 'VENDOR' OR RERS.source_type_code = 'ASN' )
+AND ( ( nvl(RERS.closed_code, 'OPEN') NOT IN ('CLOSED','CLOSED FOR RECEIVING')))
+AND ( RERS.po_header_id = 8068 )
+AND ( RERS.to_organization_id = 204 )
+AND ( RERS.vendor_id = 12 )
+AND PHA.PO_HEADER_ID=RCT.PO_HEADER_ID
+AND RCT.SHIPMENT_HEADER_ID=RSH.SHIPMENT_HEADER_ID
+AND RSH.SHIPMENT_HEADER_ID=RSL.SHIPMENT_HEADER_ID
+AND RCT.EMPLOYEE_ID = PAP3.PERSON_ID
+AND MSIB2.INVENTORY_ITEM_ID=RSL.ITEM_ID
+AND MSIB2.ORGANIZATION_ID=RSL.TO_ORGANIZATION_ID
+AND AIDA.invoice_id = AIA.invoice_id
+AND RCT.po_distribution_id = AIDA.po_distribution_id
+AND PDA.po_distribution_id = AIDA.po_distribution_id
+AND HOU3.ORGANIZATION_ID=AIA.ORG_ID
+AND AIA.VENDOR_ID=PV.VENDOR_ID
+AND AIA.VENDOR_SITE_ID=PVS2.VENDOR_SITE_ID
+AND AIA.TERMS_ID=AT.TERM_ID
+AND aia.invoice_id = aipa.invoice_id
+AND AIA.PAYMENT_METHOD_CODE=IBY.PAYMENT_METHOD_CODE
+AND BANK.EXT_BANK_ACCOUNT_ID=AIA.EXTERNAL_BANK_ACCOUNT_ID
+AND HOU4.ORGANIZATION_ID=AIA.ORG_ID
+AND AIA.VENDOR_ID=PV1.VENDOR_ID
+AND RERV.source_type_code ='VENDOR'
+and ((nvl(RERV .CLOSED_CODE ,'OPEN') not IN('CLOSED', 'closed for receiving')))
+and (RERV.PO_HEADER_ID= 8068)
+and(RERV.TO_ORGANIZATION_ID =204) 
+and(RERV.vendor_id =12)
+AND PDA.ORG_ID = AIA.ORG_ID
+/
+alter session set nls_language='american'
+/
+exec mo_global.set_policy_context('S','204')
+/
+select * from PO_REQUISITION_HEADERS_ALL;

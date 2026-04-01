@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="WINDOWS-1252" ?>
+<dataTemplate name ="IRFANXML" description="Invoice Detail Report" Version="1.0" >
+<parameters>
+<parameter name="p_line_number" dataType="VARCHAR2"/> 
+<parameter name="p_invoice_id" dataType="VARCHAR2"/> 
+</parameters>
+<dataQuery>
+<sqlStatement name="Q1">
+<![CDATA[
+SELECT
+    SYSDATE,
+    hou.name                    operating_unit,
+    aps.segment1                supplier_number,
+    aps.vendor_name             supplier_name,
+    ass.vendor_site_code        supplier_site,
+    aia.creation_date           invoice_date,
+    aia.invoice_id              invoice_number,
+    aia.description             description,
+    ail.line_number             line_number,
+    ail.line_type_lookup_code   line_type,
+    aia.invoice_amount          amount
+FROM
+    ap_invoices_all         aia,
+    ap_invoice_lines_all    ail,
+    ap_supplier_sites_all   ass,
+    hr_operating_units      hou,
+    ap_suppliers            aps 
+WHERE
+    ass.vendor_site_id = aia.vendor_site_id
+    AND aia.invoice_id = ail.invoice_id
+    AND ass.vendor_id = aia.vendor_id
+    AND aia.org_id = hou.organization_id
+    AND aia.vendor_id = aps.vendor_id
+    AND ail.line_number  =nvl(:p_line_number,ail.line_number)
+    AND aia.invoice_id =nvl(:p_invoice_id,aia.invoice_id)
+]]>
+</sqlStatement>
+</dataQuery>
+<dataStructure>
+<group name="G_1" source="Q1">
+    <element name="operating_unit"      value="operating_unit" />
+	<element name="supplier_number"      value="supplier_number" />
+	<element name="supplier_name"      value="supplier_name" />
+	<element name="supplier_site"      value="supplier_site" />
+	<element name="invoice_date"      value="invoice_date" />
+	<element name="invoice_number"      value="invoice_number" />
+	<element name="description"      value="description" />
+	<element name="line_number"      value="line_number" />
+	<element name="line_type"      value="line_type" />
+	<element name="amount"      value="amount" />
+</group>
+</dataStructure>
+</dataTemplate>

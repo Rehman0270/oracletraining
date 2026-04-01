@@ -1,0 +1,543 @@
+SUB PROGRAMS
+*************
+Database programs which are saved
+under database server permenantly.
+
+Sub programs are 2 types. 
+They are 
+
+1) PROCEDURES
+2) FUNCTIONS
+
+
+STORED PROCEDURES (or)
+        PL/SQL PROCEDURES:
+***********************
+A named pl/sql program which is stored / created under 
+the data base is known stored procedure.
+It is also known as a subprogram to perform a task 
+or set of tasks.
+
+Any PROCEDURE has 2 PARTS.
+
+i) Specification 
+************     
+It contains object type,object name,and 
+Input/output argument variables.
+
+ii) Body
+******
+It contains declarations,begin block, exception
+block, and end of procedure.
+
+syntax:
+	/*Procedure specification*/
+	
+	create or replace   PROCEDURE <proc_name>
+	[(arg_1  datatype, arg_2 datatype,......)]
+	IS / AS
+
+	/* Procedure body */
+
+	<declaration stmts>;
+	BEGIN
+	-----
+	-----
+	EXCEPTION
+	--
+	--
+	END <proc_name>;
+	/ ( to compile the procedure in SQL * PLUS) 
+	 
+	Procedure created.
+
+
+
+HOW TO EXECUTE A PROCEDURE?
+We can execute a procedure in 2 methods.
+
+1) By calling procedure
+
+We can make a call to the procedure
+--from program,procedure,function,package,and trigger.
+
+NOTE: Procedure never called from SELECT Query.
+
+Syntax:-
+   proc_name[(Argval1,Argval2,....)];
+
+
+
+2) By using EXECUTE command
+we can execute any procedure explicitly by using 
+"EXECUTE" command, as follows,
+
+EXECUTE  <proc_name>[(arg_val1, arg_val2,.....)];
+
+or
+
+EXEC  <proc_name>[(arg_val1, arg_val2,.....)];
+
+
+Properties of Procedure:-
+*********************
+--It can be created as a precompiled object.
+--Means it will be compiled only once and can be 
+  executed any number of times (reusability).
+--we can modify existing Procedures (enhansibility).
+--Procedures are created with or without arguments.
+--By Default, Procedure cannot return any value.
+
+
+   
+
+--Procedures are 2 types.	
+   a) Static Procedure
+      This is procedure created without arguments,
+       means not accepting runtime input values.
+
+   b) Dynamic procedure
+      This is created with arguments,
+      means accepting runtime input values.
+
+Argument variable:
+****************
+It is known as a variable to recieve runtime input value.
+or to return output value.
+
+Arguments are 3 types
+IN
+OUT
+IN OUT
+
+By default arguments are IN type arguments, i.e recieve
+input value.
+
+--------------------------------------------------------------------------
+STATIC PROCEDURE:
+Ex:
+write a procedure to display customer 1 account details?
+
+CREATE PROCEDURE PROC_CUST_ACT
+IS
+cust_rec  cust_act_dtls%rowtype;
+begin
+select * into cust_rec
+from cust_act_dtls
+where cno='cust-1';
+dbms_output.put_line
+(chr(10)||
+'Actno: '||cust_rec.actno||chr(10)||
+'Act_type: '||cust_rec.act_type||chr(10)||
+'Open Dt: '||cust_rec.act_open_date||chr(10)||
+'Balance: '||cust_rec.act_bal
+);
+end proc_cust_act;
+
+
+
+Ex: 
+Write a procedure to find number of customers from the city
+    "Delhi"?
+
+create or replace procedure proc_cust_cnt_delhi
+is
+vcnt int;
+begin
+select count(*) into vcnt
+from cust_dtls where city='Delhi';
+dbms_output.put_line
+(chr(10)||
+'City: Delhi'||chr(10)||
+'Customer Count: '||vcnt
+);
+end;
+
+Ex:
+
+create or replace procedure
+proc_cust_cnt_bal
+is
+custcnt   int;
+total_bal   number(8,2);
+begin
+select count(c.cno),sum(cad.act_bal)
+           into custcnt,total_bal
+from cust_dtls c, cust_act_dtls cad
+where (c.city='DELHI' and cad.act_type='SB')
+and
+c.cno=cad.cno;
+dbms_output.put_line
+(chr(10)||' Account type:  SB'||chr(10)||
+' From   city  :  DELHI'||chr(10)||
+' Customer count:  '||custcnt||chr(10)||
+'Total balance:    '||total_bal
+);
+end proc_cust_cnt_bal;
+/
+
+Ex:	
+write a procedure which is finding number of emps working 
+	under dept 30?
+
+	create  procedure proc_empcount_30
+	is
+	e_count	int;
+	begin
+	select count(*) into e_count 
+	from emp 
+	where deptno=30;
+	dbms_output.put_line
+	(' Number of emps under deptno 30 are:  '||e_count);
+	end proc_ecount_30;	
+
+Ex:	execute proc_ecount_30;  /* Executing procedure explicitly */
+
+
+How do i execute a procedure implicitly?
+	By making a call to the procedure we can implicitly execute the procedure.
+
+--Calling a procedure from any program
+
+BEGIN
+proc_ecount_30; --Procedure calling stmt
+dbms_output.put_line(' calling procedure is finished');
+dbms_output.put_line(' Program Execution is finished');
+end;
+
+
+
+
+DYNAMIC PROCEDURES:
+*******************
+
+--WRITING THE PROCEDURE TO DISPLAY THE NUMBER OF EMPS IN THE 
+  GIVEN DEPTNO?
+
+CREATE OR REPLACE PROCEDURE PROC_empcnt_did
+(VDNO  EMP.DEPTNO%TYPE)
+IS
+CNT INT;
+BEGIN
+SELECT COUNT(*) INTO CNT 
+FROM EMP 
+WHERE DEPTNO=VDNO;
+DBMS_OUTPUT.PUT_LINE
+(chr(10)||' NUMBER OF EMPS IN DEPT :  '||VDNO||':   ARE : '||CNT);
+END PROC_empcnt_did;
+
+
+SAMPLE EXECUTIONS:
+
+EXEC PROC_2(10);
+EXEC PROC_2(20);
+EXEC PROC_2(30);
+
+anonymous block completed
+ NUMBER OF EMPS IN DEPT 10 ARE  2
+
+anonymous block completed
+ NUMBER OF EMPS IN DEPT 20 ARE  5
+
+anonymous block completed
+ NUMBER OF EMPS IN DEPT 30 ARE  6
+
+
+ex:
+
+declare
+vdno int;
+begin
+vdno:=&vdno;
+proc_ecount_did(vdno); --Procedure calling statement
+dbms_output.put_line(' Exec Finished');
+end;
+
+WRITING PROCEDURE CALLING STATEMENTS IN A PROGRAM:-
+
+For the following program we need to create 
+2 procedures called  p_add and p_multi.
+
+declare
+x int;
+y int;
+begin
+x:=&x;
+y:=&y;
+dbms_output.put_line(' adding '||x ||' and '||y);
+Dbms_output.put_line(' Making a call to P_ADD procedure');
+p_add(x,y);
+dbms_output.put_line(' Multiplication of '||x||' and '||y);
+dbms_output.put_line(' make a call to P_MULTI procedure');
+p_multi(x,y);
+dbms_output.put_line(' 2 tasks successfully completed');
+end;
+
+Ex:
+wap to display customer name,city,account name,actno  and bal
+from given customer id?
+
+create or replace procedure proc_cust_info
+(vcid  cust_dtls.cno%type)
+as
+type  cust_type IS RECORD
+(
+cname  cust_dtls.cname%type,
+city       cust_dtls.city%type,
+act_name act_types.act_name%type,
+actno  cust_act_dtls.actno%type,
+actbal  cust_act_dtls.act_bal%type
+);
+Vcustrec   cust_type;
+begin
+select cd.cname,cd.city,at.act_name,cad.actno,cad.act_bal
+                          into
+               vcustrec
+from cust_dtls cd, cust_act_dtls cad, act_types at
+where cd.cno=vcid
+and
+(
+cd.cno=cad.cno
+and
+cad.act_type=at.act_type
+);
+dbms_output.put_line
+(chr(10)||' cust Id:          '||vcid||chr(10)||
+'Cust name:                       '||vcustrec.cname||chr(10)||
+'City:                                  '||vcustrec.city||chr(10)||
+'Account Name:                 '||vcustrec.act_name||chr(10)||
+'Account Number:             '||vcustrec.actno||chr(10)||
+'Balance:                           '||vcustrec.actbal
+);
+end proc_cust_info;
+/
+Ex:
+create or replace procedure
+proc_emp_count(vdname   dept.dname%type)
+is
+vcnt  int;
+begin
+select count(*) into vcnt
+from emp
+where deptno=
+(select deptno from dept
+  where dname=vdname);
+dbms_output.put_line
+(chr(10)||' given dept name:  '||vdname||chr(10)||
+'Number of emps:   '||vcnt
+);
+end proc_emp_count;
+/
+
+
+
+
+STATIC PROCEDURE:
+
+Ex:	
+write a procedure to display the customer details and his account details for the custid "cust-5"?
+
+	create or replace procedure proc_CUST_ACT_DTLS
+	is
+	v_cname		cust_dtls.cname%type;
+	v_gender	cust_dtls.gender%type;
+	v_city		cust_dtls.city%type;
+	v_actno		cust_act_dtls.actno%type;
+	v_act_type	cust_act_dtls.act_type%type;
+	v_act_bal	cust_act_dtls.act_bal%type;
+	begin
+	select c.cname,c.gender,c.city,ca.actno,ca.act_type,ca.act_bal INTO
+	       V_CNAME,v_gender,v_city,v_actno,v_act_type,v_act_bal
+	from cust_dtls c , cust_act_dtls ca
+	where c.cno='cust-5'
+		and
+		c.cno=ca.cust_code;
+	dbms_output.put_line(' Details of  customer 5');
+	dbms_output.put_line(v_cname||' '||v_gender||' '||v_city||' '||v_actno||' '||v_act_type||' '||v_act_bal);
+	end proc_CUST_ACT_DTLS;
+
+
+
+
+DYNAMIC PROCEDURE:
+
+Ex:	
+write a procedure to display the customer details and his account 
+details for the GIVEN custid ?
+
+	create or replace procedure proc_3
+	(VCID  cust_dtls.cno%type)
+	is
+	v_cname 	cust_dtls.cname%type;
+	v_gender  cust_dtls.gender%type;
+	v_city cust_dtls.city%type;
+	v_actno  cust_act_dtls.actno%type;
+	v_act_type  cust_act_dtls.act_type%type;
+	v_act_bal	   cust_act_dtls.act_bal%type;
+	begin
+	select c.cname,c.gender,c.city,ca.actno,ca.act_type,ca.act_bal INTO
+	       V_CNAME,v_gender,v_city,v_actno,v_act_type,v_act_bal
+	from cust_dtls c , cust_act_dtls ca
+	where c.cno=VCID
+		and
+		c.cno=ca.cust_code;
+	dbms_output.put_line(' Details of customer '||VCID);
+	dbms_output.put_line(v_cname||' '||v_gender||' '||v_city||' '||v_actno||' '||v_act_type||' '||v_act_bal);
+	end proc_3;
+
+
+Ex:
+Ex:	
+write a procedure to display the customer details and his account 
+details for the GIVEN custid ?
+
+	create or replace procedure proc_3
+	(VCID  cust_dtls.cno%type)
+	is
+	type cust_type is record
+	(
+	custname  cust_dtls.cname%type,
+	custcity     cust_dtls.city%type,
+	gender      cust_dtls.gender%type,
+	actno         cust_act_dtls.actno%type,
+	act_type   cust_act_dtls.act_type%type,
+	act_bal     cust_act_dtls.act_bal%type
+	);
+	  vactdtls  cust_type;
+	begin
+	select c.cname,c.city,c.gender,
+		cad.actno,cad.act_type,cad.act_bal 
+			INTO
+	      vactdtls
+	from cust_dtls c , cust_act_dtls cad
+	where c.cno=VCID
+		and
+		c.cno=cad.cno;
+	dbms_output.put_line
+	(' Details of customer '||VCID);
+	dbms_output.put_line
+	(
+	chr(10)||
+	'Name:    '||vactdtls.custname||chr(10)||
+	'City:       '||vactdtls.custcity||chr(10)||
+	'gender:  '||vactdtls.gender||chr(10)||
+	'A/c No:  '||vactdtls.actno||chr(10)||
+	'A/c Type: '||vactdtls.act_type||chr(10)||
+	'Balance:    '||vactdtls.act_bal
+	);
+	end proc_3;
+
+
+
+STATIC PROCEDURE:
+
+Ex:	write a procedure to display the employee details and dept details for the empno 7902?
+
+	create or replace procedure proc_4
+	is
+	v_ename	emp.ename%type;
+	v_job	emp.job%type;
+	v_sal	emp.sal%type;
+	v_hiredate emp.hiredate%type;
+	v_dno	emp.deptno%type;
+	v_dname	dept.dname%type;
+	v_loc	dept.loc%type;
+	begin
+	select e.ename,e.sal,e.job,e.hiredate,e.deptno,d.dname,d.loc INTO
+		v_ename,v_sal,v_job,v_hiredate,v_dno,v_dname,v_loc
+	from emp e , dept d
+	where e.empno=7902  and e.deptno=d.deptno;
+	dbms_output.put_line('Details of empno= 7902');
+	dbms_output.put_line(v_ename||' '||v_job||' '||v_sal||' '||v_hiredate||' '||v_dno||' '||v_dname||' '||v_loc);
+	end proc_4;
+
+DYNAMIC PROCEDURES:
+
+EX: write a procedure to display the details of employee for the given employee id?
+
+	create or replace procedure proc_5 ( vempid emp.empno%type) 
+	is
+	emp_rec	emp%rowtype;
+	begin
+	select * into emp_rec from emp where empno=vempid;
+	dbms_output.put_line(' employee details of '||vempid);
+	dbms_output.put_line(' ***********************************************************************');
+	dbms_output.put_line(emp_rec.ename||','||emp_rec.sal||','||emp_rec.job||','||emp_rec.hiredate);
+	end proc_5;
+  
+
+sample output:
+
+ employee details of 7902
+FORD,3000,ANALYST,03-DEC-81
+
+anonymous block completed
+ employee details of 7788
+SCOTT,3000,ANALYST,19-APR-87
+
+anonymous block completed
+ employee details of 7654
+MARTIN,1250,SALESMAN,28-SEP-81
+
+
+
+
+Ex:	write a procedure to display the customer mobile number and name of the given custid if he is male and from the 	city delhi?
+
+desc cust_dtls
+Name       Null Type         
+---------- ---- ------------ 
+CUSTID          CHAR(4)      
+CUSTNAME        VARCHAR2(20) 
+CUSTCITY        VARCHAR2(10) 
+CUSTGENDER      CHAR(1)      
+CUSTMOBILE      NUMBER(10)   
+
+create or replace procedure proc_5(vcid	cust_dtls.cno%type) is
+	--vmobile		cust_dtls.mobile%type;
+	vcustname	cust_dtls.cname%type;
+	begin
+	select cname into vcustname from cust_dtls where cno=vcid and gender='M' and 
+	city='Delhi';
+	dbms_output.put_line(' give customer id='||vcid);
+	dbms_output.put_line(' he is male and he is from delhi');
+	--dbms_output.put_line('mobile number is -'||vmobile);
+	dbms_output.put_line(' His  name is  '||vcustname);
+	end proc_5;
+
+
+Ex:
+create or replace procedure proc_deposit
+    (
+    vactno  cust_act_dtls.actno%type,
+    vamt    number
+    )
+    is
+    vbal  number;
+    begin
+    dbms_output.put_line
+   (chr(10)||' Account Number:  '||vactno);
+   select act_bal into vbal
+   from cust_act_dtls
+   where actno=vactno;
+   dbms_output.put_line
+   (chr(10)||' Old balance:   '||vbal);
+   update cust_act_dtls
+   set act_bal=act_bal+vamt
+   where actno=vactno;
+  commit;
+   select act_bal into vbal
+   from cust_act_dtls
+   where actno=vactno;
+  dbms_output.put_line
+   (chr(10)||' deposited amount:  '||vamt||chr(10)||
+   ' New balance:   '||vbal||chr(10)||
+   'Transaction completed successfully'
+   );
+  end proc_deposit;  
+
+Ex:	write a procedure to display number of emps working under given department name?
+
+Ex:	write a procedure to display the number of customers from the given city with given gender?
+
+Ex:	write a procedure to display the number of accounts of given account type?

@@ -1,0 +1,730 @@
+Exceptions
+*********
+--What is exception?
+--Use of exception?
+--Types of exceptions?
+--How to handle it?
+
+Q: Problem without exception handling?
+
+--display employee names who is getting the given salary?
+
+create or replace procedure proc_ename(vsal  number)
+is
+vename  varchar2(10);
+begin
+select ename into vename from emp where sal=vsal;
+dbms_OUTPUT.PUT_LINE(VENAME);
+END PROC_ENAME;
+
+EXEC PROC_ENAME(10000);
+
+
+ERRORS LIKE:
+
+01422. 00000 -  "exact fetch returns more than requested number of rows"
+
+01403. 00000 -  "no data found"
+
+....
+
+
+NOTE:
+	General programs or procedures cannot be able to display multiple records from a table or multiple values from a 	column.
+
+	For Multiple records-----Explicit cursors
+	For multiple values from a column---Using VARRAYS
+
+
+
+
+
+
+
+EXCEPTIONS
+***********
+Exception is a plsql runtime error.
+It is handled by programmer to display user friendly error message.
+Default oracle error format is
+
+ERROR:
+ORA-xxxxxx:    <message>
+<error code>:  <error message >
+SQLCODE		SQLERRM
+
+Exceptions are 2 types.
+
+a) Pre defined exceptions
+b) User defined exceptions
+
+i) Pre defined/system defined/ Named Exceptions
+
+These can be managed by data base engine as follows.
+--While execution if there exists any error then  it will look
+   for exception block.
+--With in that it will look for corrsponding exception handler.
+--Then it executes the stmts with in the exception handler.
+
+Note:
+*****
+Exceptions are raised in BEGIN block.
+Exceptions are defined under exception block as follows.
+
+Exception Definition:
+*****************
+In exception block we can define an exception as follows.
+
+SYNTAX:
+	when  <exception Handler> then
+	--stmt-1--
+	--stmt-2--
+	--stmt-3--
+
+Exception handlers / 
+Pre defined Exception names
+************************
+i) TOO_MANY_ROWS
+It will be raised when the select statement is selecting data 
+from multiple records.
+
+ii) NO_DATA_FOUND
+It will be raised if select query not selecting data from the 
+table.
+
+iii) ZERO_DIVIDE
+It will be raised if a value is devided by zero.
+
+iv) CURSOR_ALREADY_OPEN
+It will be raised if we are trying to open a cursor which is
+already opened.
+
+v) VALUE_ERROR
+It will be raised if there exist datatype or size mismatch 
+between variable and value.
+
+vi) CASE_NOT_FOUND
+It will be raised if case structure don't has matched case and
+and don't has ELSE  part.
+
+
+EXAMPLE PROCEDURES:
+
+Ex: 
+Write a procedure to display employee name and job for 
+the given salary?
+
+CREATE OR REPLACE PROCEDURE PROC_no_EXCEP
+(VSAL  NUMBER)
+IS
+VNAME EMP.ENAME%TYPE;
+VJOB  EMP.JOB%TYPE;
+BEGIN
+SELECT ename,job INTO vname,vjob from emp where sal=vsal;
+dbms_output.put_line('Name of emp:'||vname||';  Desg of emp:  '||vjob);
+dbms_output.put_line(' End of procedure ');
+end proc_no_excep;
+
+SET SERVEROUTPUT ON;
+
+EXEC PROC_NO_EXCEP(5000);
+
+SELECT ENAME ,JOB ,SAL FROM EMP;
+
+EXEC PROC_NO_EXCEP(800);
+
+EXEC PROC_NO_EXCEP(10000);
+
+
+Ex:	Above procedure with exceptions
+
+CREATE OR REPLACE PROCEDURE PROC_EXCEP
+(VSAL  NUMBER)
+IS
+VNAME EMP.ENAME%TYPE;
+ VJOB  EMP.JOB%TYPE;
+BEGIN
+SELECT ename,job 
+            INTO 
+vname,vjob 
+from emp 
+where sal=vsal;
+dbms_output.put_line
+('Name of emp:  '||vname||
+'     Job of emp:   '||vjob);
+dbms_output.put_line(' End of procedure ');
+
+EXCEPTION
+WHEN TOO_MANY_ROWS THEN
+DBMS_OUTPUT.PUT_LINE(' SAL IS DUPLICATED');
+DBMS_OUTPUT.PUT_LINE
+(' selecting data from multiple records 
+is not yet possible without using cursors');
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPUT.PUT_LINE
+('No emp Getting this salary');
+end proc_excep;
+
+
+EXEC PROC_EXCEP(800);----Only one employee is getting sal-display output
+
+EXEC PROC_EXCEP(8000);---No emp getting this salary , so raise an error no_data_found
+EXEC PROC_EXCEP(1250);---Multiple emps getting the salary, so raise an error Too_many_rows.
+
+
+
+Ex:	
+write a procedure to display the employee details who is
+ working with given designition?
+
+	create or replace procedure proc_emp_dtls_desg
+	(vjob	emp.job%type)
+	is
+	r_emp	emp%rowtype;
+	begin
+	select * into r_emp from emp where job=vjob;
+	dbms_output.put_line
+	(' The given job is '||vjob);
+	dbms_output.put_line
+	(r_emp.empno||' '||r_emp.ename||' '||r_emp.job||' '||r_emp.sal||
+	'  '||r_emp.hiredate||' '||r_emp.comm||' '||r_emp.deptno);
+        EXCEPTION
+        WHEN TOO_MANY_ROWS THEN
+          DBMS_OUTPUT.PUT_LINE
+	(' MULTIPLE EMPS WORKING AS   '||VJOB);
+          DBMS_OUTPUT.PUT_LINE
+	(' I can display if there exists 1 emp with the given job');
+										Otherwise i am 	unable to display multiple records');
+        WHEN NO_DATA_FOUND THEN
+          DBMS_OUTPUT.PUT_LINE
+	('No EMPS WORKKING AS   '||VJOB);
+	end proc_emp_dtls_desg;
+
+
+sample outputs:
+
+anonymous block completed
+ MULTIPLE EMPS WORKING LIKE   SALESMAN
+
+PROCEDURE PROC_EMP_DTLS_DESG compiled
+anonymous block completed
+ MULTIPLE EMPS WORKING LIKE   SALESMAN
+ I can display if there exists 1 emp with the given job, Otherwise i am unable to display multiple records
+
+anonymous block completed
+ The given job is PRESIDENT
+7839 KING PRESIDENT 5000  17-NOV-81 2000 10
+
+
+
+Ex:	
+write a procedure to display customer account detials 
+for the given customer id?
+If customer have multiple account or no account or no custid 
+then display corresponding message?
+
+
+create or replace procedure proc_cust_act_dtls
+(vcid cust_act_dtls.cno%type)
+is
+act_info  cust_act_dtls%rowtype;
+begin
+select * into act_info
+from cust_act_dtls
+where cno=vcid;
+dbms_output.put_line
+(' Customer account information of custid:   '|| vcid);
+dbms_output.put_line
+('------------------------------------------------------------');
+dbms_output.put_line
+('customer account number:      '||act_info.actno);
+dbms_output.put_line
+('customer account type:        '||act_info.act_type);
+dbms_output.put_line
+('Account Open Dt:        '||act_info.act_open_date);
+dbms_output.put_line
+('Account Balance:              '||act_info.act_bal);
+EXCEPTION
+WHEN no_data_found then
+dbms_output.put_line(' Customer has no account ');
+WHEN too_many_rows then
+dbms_output.put_line(' Customer has multiple accounts');
+end proc_cust_act_dtls;
+
+
+Ex:
+
+--write a procedure to display student name,course name, and fee
+--for given student rno?
+--IF rno not available or rno duplicated then print user friendly
+--error messages?
+
+create or replace procedure proc_stud_info
+(vrno  stud.rno%type)
+is
+vname    stud.sname%type;
+vcourse  stud.course%type;
+vfee        stud.fee%type;
+begin
+select sname,course,fee into 
+           vname,vcourse,vfee
+from stud
+where rno=vrno;
+dbms_output.put_line
+(chr(10)||' given roll number:    '||vrno||chr(10)||
+'-------------------------------------'||chr(10)||
+'Student name:     '||vname||chr(10)||
+'Course Name:      '||vcourse||chr(10)||
+'Fee Paid:              '||vfee
+);
+
+exception
+when no_data_found  then
+dbms_output.put_line
+(chr(10)||' Roll number not found');
+when too_many_rows then
+dbms_output.put_line
+(chr(10)||' Duplicate Roll number, not able to display info');
+
+end proc_stud_info;
+
+
+
+
+----------------------------------------------------------------------------
+
+2) User defined exceptions 
+**********************
+Here Programmer has to manage the exceptions. 
+Programmer has to RAISE the exception if he is expecting any 
+error. The exception is to raised by using exception variable 
+name. 
+The exception variable is acts as and EXCEPTION HANDLER 
+in exception block.
+
+
+i) 
+    Declare exception type of variable in declare block.
+    This variable is known as exception handler, since we can 
+    handle one error with this name.
+
+	syn:	var	exception;
+
+ 
+	Ex:	comm_miss	exception;
+
+ii) 
+     Programmer can Raise the exception by using RAISE stmt (or)
+     Raise_Application_Error();
+     
+
+	syn:	RAISE  <excep_var>;
+	
+	Ex:	RAISE  COMM_MISS;
+
+
+iii) 
+    Define exception, under exception block.
+
+	syn:	WHEN  <excep_var> THEN
+		stmts;
+		stmts;
+		:
+
+ex:	
+when comm_miss then
+dbms_output.put_line(' comm value  is null');
+
+
+
+Ex:	
+write a procedure to display the commission of the employee 
+from given employee id? If commission is null, then display any
+user friendly error message?
+
+
+	create or replace procedure proc_emp_comm
+	( veno  emp.empno%type)
+	is
+	vcomm      emp.comm%type;
+
+/* Declaring Exception type variable , 
+     Then it is acting as exception Handler. 
+     we can RAISE exception in begin block and
+     we can define exception  in exception block    */
+
+	comm_miss     exception; 
+.	BEGIN                    
+	select comm into vcomm 
+	from emp 
+	where empno=veno;
+	
+	if vcomm is null then
+	RAISE comm_miss;
+	else
+	dbms_output.put_line
+	(' comm of  '||veno||'  is  '||vcomm);
+	end if;
+	EXCEPTION
+	when no_data_found then
+	dbms_output.put_line
+	(' No employee with  id:  '||veno);
+	when Too_many_rows then
+	dbms_output.put_line
+	(' Duplicate empid existed');
+	when comm_miss then
+	dbms_output.put_line
+	(' Employee  not getting commission ');
+	end proc_emp_comm;
+
+
+sample output:
+
+PROCEDURE PROC_EMP_COMM compiled
+EX:
+EXEC PROC_EMP_COMM(7654);
+anonymous block completed
+  comm of  7654  is  1400
+
+anonymous block completed
+ comm of  7788  is  2000
+
+anonymous block completed
+ comm of employee is null
+
+anonymous block completed
+ No employee with given id
+
+
+Ex:	
+Write a procedure to display employee information , 
+if any column value is null display corresponding message 	for the given employee id?
+
+create or replace procedure proc_e1_comm1( veno  emp.empno%type)
+	is
+	r emp%rowtype;
+  begin
+	select * into r from emp where empno=veno;
+  dbms_output.put_line(r.ename||';'||r.sal||';'||r.job||';'||r.hiredate);
+  if r.mgr is null then
+  dbms_output.PUt_line(' Mgr code is null for empid '||veno);
+  else
+  dbms_output.put_line(' mgr code is '||r.mgr);
+  end if;
+  if r.comm is null then
+  dbms_output.PUt_line(' comm is null for empid '||veno);
+  else
+  dbms_output.put_line(' comm is '||r.comm);
+  end if;
+  if r.deptno is null then
+  dbms_output.PUt_line(' deptno is null for empid '||veno);
+  else
+  dbms_output.put_line(' deptno is '||r.deptno);
+  end if;
+	exception
+	when no_data_found then
+	dbms_output.put_line(' No employee with  id'||veno);
+	when Too_many_rows then
+	dbms_output.put_line(' Duplicate empid existed');
+		end proc_e1_comm1;
+  
+
+
+
+
+--------------------------------------------------------------------------------------------------------
+
+ex:	
+write a procedure to display the mfg, exp and warrenty of the 
+
+given product id?
+If any one is null then display corresponding message?
+
+create or replace procedure proc_warr
+(vpid  prod_dtls.prod_code%type)
+is
+vwarr  prod_dtls.warrenty%type;
+warr_null  exception;
+begin
+select warrenty into vwarr
+from  prod_dtls
+where prod_code=vpid;
+if (vwarr is null) then
+raise warr_null;
+else
+dbms_output.put_line
+(' warrenty of  '||vpid||' is  : '||vwarr);
+end if;
+EXCEPTION
+when too_many_rows then
+dbms_output.put_line
+('Duplicate product id ');
+when no_data_found then
+dbms_output.put_line
+(' Product id is not existed ');
+when warr_null then
+dbms_output.put_line
+(' No warrenty');
+end proc_warr;
+
+
+Ex:	
+write a procedure to dispaly the account number,account type, 
+account balance, account open date for given customer  id?
+
+
+----------------------------------------------------------------------------	
+SQLCODE & SQLERRM:
+*******************
+These are Oracle’s built-in error reporting functions in PL/SQL.
+Any error is processed by oracle engine as follows.
+
+When an error occurs in PL/SQL at runtime:
+
+1)
+SQLCODE returns the number of the last encountered error.
+
+2)
+SQLERRM returns error message associated with above error code.
+
+
+An internally defined exception gets raised implicitly; 
+it always has an error code (of the form ORA-<number>).
+
+ORA-<number>: <error message>
+
+Ex:
+wap to display emp name from first record?
+
+declare
+      vename emp.ename%type;
+    begin
+     -- Incorrect column name
+     execute immediate
+     'select empname into vename
+     from emp
+     where rownum = 1';
+   exception
+       when others then
+         dbms_output.put_line('ERROR CODE: '|| SQLCODE);
+         dbms_output.put_line('ERROR MESSAGE: '|| SQLERRM);
+   end;
+
+Output:
+
+SQLCODE: -904
+SQLERRM: ORA-00904: "EMPNAME": invalid identifier
+   /
+
+Note:
+We can also define names for Internally defined exceptions, and we 
+can use SQLCODE and SQLERRM to define these names, under exception handling
+ process. [ by using PRAGMA ]
+
+
+Ex:-2
+wap to display emp name from first record?
+
+declare
+      vename emp.ename%type;
+      VERRCODE   number;
+    begin
+     -- Incorrect column name
+     execute immediate
+     'select empname into vename
+     from emp
+     where rownum = 1';
+   exception
+       when others then
+        verrcode:=sqlcode;
+         dbms_output.put_line('ERROR CODE: '|| SQLCODE);
+         dbms_output.put_line
+	(' Invalid column name, please verify select query');
+   end;
+
+
+
+declare
+      vename emp.ename%type;
+      VERRCODE   number;
+    begin
+     -- Incorrect column name
+     execute immediate
+     'select ename into vename
+     from empsssss
+     where rownum = 1';
+   exception
+       when others then
+        verrcode:=sqlcode;
+         dbms_output.put_line('ERROR CODE: '|| verrcode);
+         if verrcode=-904 then
+         dbms_output.put_line
+	(' Invalid column name, please verify select query');
+  elsif (verrcode=-942) then
+  dbms_output.put_line
+	(' Invalid TABLE  name, please verify select query');
+  else
+  dbms_output.put_line
+	(' Invalid command, please verify select query');
+  end if;
+   end;
+
+
+
+----------------------------------------------------------------------------
+PRAGMA  EXCEPTION_INIT(error_name, -error_no);
+			|		|
+			|		V
+			V	oracle defined error number
+			user defined exception name
+
+This method is used to display any user friendly error message
+by using oracle defined error number.
+we can define error names for oracle defined error codes.
+
+This process has 3 steps.
+
+1) declare "exception type" variable.
+
+2) Associate that variable with error code in PRAGMA.
+
+3) Handle an error under exception block.
+
+
+Ex:
+write a procedure to display user defined error message,
+if the user try to delete a parent record which has dependent
+child records?
+
+create or replace procedure delete_company
+(vcmpname  comp_dtls.comp_name%type)
+is
+parent_rec_del       exception;
+pragma exception_init(parent_rec_del,-02292);
+begin
+delete from comp_dtls
+where comp_name=vcmpname;
+Exception
+when parent_rec_del then
+dbms_output.put_line
+(' Dont delete company:  '||vcmpname||'   , since it has PRODUCTS');
+when no_data_found then
+dbms_output.put_line
+(' Company name is not valid');
+end delete_company;
+
+
+Ex:
+
+ -- Scenario: Internally Defined Error
+ -- with error name explicitly defined
+
+ declare
+      vename emp.ename%type;
+ 
+      -- Assign error name to internally defined error
+      invalid_column  exception;
+ 
+      -- Associate error name with error code
+      -- of the internally defined exception
+      pragma exception_init(invalid_column, -904);
+   begin
+     -- Incorrect column name
+     execute immediate
+     'select empname into vename
+     from emp
+     where rownum = 1';
+ 
+    exception
+       -- Named exception handler for ORA-00904
+       when invalid_column then
+         dbms_output.put_line('SQLCODE: '|| SQLCODE);
+         dbms_output.put_line('SQLERRM: '|| SQLERRM);
+   end;
+  /
+SQLCODE: -904
+SQLERRM: ORA-00904: "EMPNAME": invalid identifier
+
+PL/SQL procedure successfully completed.
+----------------------------------------------------------------------------
+
+
+RAISE_APPLICATION_ERROR()
+*************************
+The raise_application_error  is a procedure defined by 
+Oracle that allows the developer to raise an exception 
+and associate an error number and message with the 
+procedure. 
+
+RAISE_APPLICATION_ERROR(Error_code,Error Name)
+
+we can display user defined error message in oracle error format.
+That is 
+ORA-xxxxx: -----------mesg----------
+This method can be executed either BEGIN block
+or EXCEPTION block.
+
+ In this method, we can use error numbers between -20000 and -20999.
+
+-----------------------------------------------------------------------------------
+Ex:
+write a procedure to deposit the given amount, 
+into given account NO.
+If amount is below 100 or above 49900,
+then display a warning message to the customer web page?
+-----------------------------------------------------------------------------------
+create or replace procedure proc_deposit
+(
+vactno cust_act_dtls.actno%type,
+vamt  int
+)
+is
+vbal  number;
+begin
+select act_bal into vbal 
+from cust_act_dtls
+where actno=vactno;
+dbms_output.put_line
+(' Old balance:  '||vbal);
+if vamt<100 or vamt>49900 then
+raise_application_error
+(-20003,'Please enter valid amount, Min. 100 , Max. 49900');
+else
+update cust_act_dtls
+set act_bal=act_bal+vamt
+where actno=vactno;
+commit;
+dbms_output.put_line
+(' Deposited  Rs.  '||vamt||'   successfully');
+END IF;
+select act_bal into vbal
+from cust_act_dtls where actno=vactno;
+dbms_output.put_line
+('New Balance:   '||vbal);
+dbms_output.put_line
+(' Transaction completed ');
+end proc_deposit;
+
+
+--Program to call above procedure
+declare
+vactno  cust_act_dtls.actno%type;
+amount  int;
+begin
+vactno:='&vactno';
+amount:='&amount';
+proc_deposit(amount,vactno);
+end;
+
+NOTE:
+Predefined exceptions
+--> to display user friendly error messages by using oracle defined Names
+
+User defined exceptions
+--> to display user friendly error  messages by using user defined Names
+
+Pragma exception_init()
+--> to display user friendly error messages by using Oracle defined error codes
+
+RAISE_APPLICATION_ERROR()
+
+--> to display user friendly error messages in oracle error format.

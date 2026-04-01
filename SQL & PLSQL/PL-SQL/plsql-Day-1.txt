@@ -1,0 +1,652 @@
+			PL/SQL
+	PROCEDURAL LANGUAGE / SQL
+
+It is a procedural language plus sql Queries.
+It is an extension to the sql. i.e sql queries with programming logic.
+
+
+What is pl/sql?
+PLSQL is a collection of User defined objects like Programs, 
+procedures, Functions, Triggers, Types, Packages and so on.
+
+Advantages:
+**********
+--Multiple queries are executed parllelly.
+--It reduces number of hits to the database.
+--It increases n/w performance.
+--Modularity ( dividing a big task into smaller modules )
+--Enhansibility ( It can easily accept the future changes )
+--Reusability (create a program once and execute it any  
+	       number of times)
+
+
+PL/SQL objects are divided into 2 categories.
+
+They are
+i) Programs / Anonymous Blocks 
+   These objects not saved in the database.
+   These program's logic is included in the 
+   User Interface application developement.
+
+ii) Sub Programs    
+    These objects permanently saved in the database server.
+
+EX:
+Procedures
+Functions
+ 
+
+ANONYMOUS BLOCK:
+
+STRUCTURE :
+***********
+
+	DECLARE		
+	<declaration stmts >;
+	BEGIN		
+	<Assignment stmt>;
+	<Output stmts>;
+	<Data processing stmts>;
+	EXCEPTION	
+	<Error handling stmts>;
+	END; 
+
+	/  (to compile and execute program in SQL * PLUS)
+
+NOTE:
+In the above program , DECLARE and EXCEPTION blocks are 
+optional. Where as BEGIN and END are Mandatory
+
+
+DECLARE block:
+*************
+It contains declaration statements to declare variables.
+Variable is a name with min length 1 char and max length 30 charaters.
+Variables are also known as Identifier or literal or place holder.
+Variables are useful to store values temporarily.
+So these variables get memory space from the database engine 
+based on their datatype and size.
+
+syn:	
+	varname   DATATYPE(size);
+
+Ex:	v_eno	int;
+	v_name	varchar2(20);
+	
+
+BEGIN block:
+***********
+It is also known as execution block.
+It contains program logic as follows.
+
+i) Assignment stmts:
+*****************
+we can store values into the declared variables by using 
+either assignment operator [ := ] or SELECT query with 
+INTO keyword.
+
+syn-1: BY USING ASSIGNMENT OPERATOR
+
+     var := value / expression / Function_calling stmt;
+
+Ex:	v_eno := 7654;
+
+
+
+syn-2: By Using SELECT Query with INTO keyword
+
+	select col1, col2, ....,coln 
+		INTO 
+	         var_1, var_2,....var-n
+	from tablename
+	where <cond>;
+
+Note:
+**** 
+1) In the above syntax, Number of columns and 
+     number of variables should be similar.
+
+2) column data type and variable data type should
+    be similar in the same sequence.
+
+
+Ex:	select ename,sal,hiredate 
+		INTO 
+		V_name,v_sal,v_jdate
+	from emp where empno=v_eno;
+
+
+ii) Out Put stmt:
+*************
+It is Used to display text messages and variable
+values.
+Oracle provided a predefined output function as follows.
+
+DBMS_OUTPUT.PUT_LINE('messages' or varname);
+
+   Ex:	
+   dbms_output.put_line(' employee information ');
+   dbms_output.put_line(v_eno);
+  
+
+iii) Data Processing stmts:
+**********************	
+Any sql query
+( select,insert, update, delete, commit, rollback,Truncate)
+with in begin block ,is known as data processing stmt.
+
+EXCEPTION Block
+**************
+It contains error handling stmts to handle runtime errors.
+
+END;
+****
+It is indicating end of a program.
+
+comments:
+------------
+we can maintain comment lines in program to make 
+any program as developer friendly.
+
+   -- <text>	single line comment symbol.
+   /* text  */	multi line comment symbol.
+
+
+   NOTE:
+   By default any program or procedure should not display output. 
+   To display output, 
+
+SET SERVEROUTPUT ON;
+This is valid for current session.
+
+
+Ex:	
+write a program to display welcome message .
+
+	begin
+	dbms_output.put_line('welcome to oracle pl/sql');
+	end;
+
+Ex:	
+write a program to display addition , average, max 
+and min of 3000 and 5000?
+
+	DECLARE
+	X	INT;
+	Y	INT:=5000;
+	S	INT;
+	A	NUMBER(7,2);
+	MX	INT;
+	MN	INT;
+	BEGIN
+	X:=3000;
+	S:=X+Y;
+	A:=S/2;
+	SELECT GREATEST(X,Y) INTO MX FROM DUAL;
+	SELECT LEAST(X,Y) INTO MN	FROM DUAL;
+	DBMS_OUTPUT.PUT_LINE(' SUM=');
+	DBMS_OUTPUT.PUT_LINE(S);
+	DBMS_OUTPUT.PUT_LINE('AVERAGE=');
+	DBMS_OUTPUT.PUT_LINE(A);
+	DBMS_OUTPUT.PUT_LINE('HIGHER VALUE=');
+	DBMS_OUTPUT.PUT_LINE(MX);
+	DBMS_OUTPUT.PUT_LINE('Least VALUE=');
+	DBMS_OUTPUT.PUT_LINE(MN);
+	END;
+	/
+		
+sample execution:
+
+SUM=
+8000
+AVERAGE=
+4000
+HIGHER VALUE=
+5000
+MIN VALUE=
+3000
+
+PL/SQL procedure successfully completed.
+
+---------------------------------------------------------------------------------------------------
+NOTE:
+
+How can i display a normal mesg after that the value of variable 
+immediately in the same line?
+
+By using Concatenation Operator [ || ]
+*******************************
+It will display the value and message after the previous 
+message or value.
+
+Syntax:
+dbms_output.put_line('mesg'||varname);
+
+Ex:
+dbms_output.put_line('ename:  '||vename);
+
+ename:  SCOTT
+
+
+
+CHR(10)
+*******
+It is known as New Line Character In Windows OS.
+
+Ex:
+dbms_output.put_line('mesg1'||chr(10)||'mesg2');
+
+mesg1
+mesg2
+
+
+chr(13)
+******
+It is a New Line Character In unix / linux OS
+
+
+syntax:
+--------
+dbms_output.put_line
+(chr(10)||' mesg1:   '||var1||chr(10)||
+              'mesg 2 :   '||var2||chr(10)||
+.......
+);
+
+----------------------------------------------------------------------------------------------------
+
+DECLARE
+	X	INT;
+	Y	INT:=5000;
+	S	INT;
+	A	NUMBER(7,2);
+	MX	INT;
+	MN	INT;
+	BEGIN
+	X:=3000;
+	S:=X+Y;
+	A:=S/2;
+	SELECT GREATEST(X,Y) INTO MX FROM DUAL;
+	SELECT LEAST(X,Y) INTO MN	FROM DUAL;
+	DBMS_OUTPUT.PUT_LINE(' SUM= '||s);
+	--DBMS_OUTPUT.PUT_LINE(S);
+	DBMS_OUTPUT.PUT_LINE('AVERAGE= '||a);
+	--DBMS_OUTPUT.PUT_LINE(A);
+	DBMS_OUTPUT.PUT_LINE('HIGHER VALUE= '||mx);
+	--DBMS_OUTPUT.PUT_LINE(MX);
+	DBMS_OUTPUT.PUT_LINE('MIN VALUE='||mn);
+	--DBMS_OUTPUT.PUT_LINE(MN);
+	END;
+	/
+
+sample execution:
+
+anonymous block completed
+ SUM=8000
+AVERAGE=4000
+HIGHER VALUE=5000
+MIN VALUE=3000
+-------------------------------------------------------------------------------------------
+
+
+Types of programs: 2
+
+1) Static program:
+It will not accept input values, at run time.
+
+2) Dynamic program:
+In this case the program can accept runtime input values.
+we can make a program as Dynamic Program by using "&"
+(Substitution Operator).
+
+varname:='&varname';
+
+
+Ex:
+As per above syntax, at runtime it will prompt for variable value as follows.
+
+Enter value for varname: <value>
+
+
+
+------------------------------------------------------------------------------------------
+
+STATIC PROGRAMS:
+
+Ex:	
+write a program to display the employee information of empID 7654?
+	
+	declare
+	veno        int:=7654;
+	vname     varchar2(20);
+	vsal         number(5);
+	vjob        varchar2(20);
+	vhiredate date;
+	vcomm     number(4);
+	vdeptno    number(3);
+	BEGIN
+	select ename,sal,job,hiredate,comm,deptno 
+                                                    INTO
+		vname,vsal,vjob,vhiredate,vcomm,vdeptno
+	from emp
+	where empno=veno;
+	dbms_output.put_line(' Info of 7654');
+	dbms_output.put_line('---------------');	
+	dbms_output.put_line(vname);
+	dbms_output.put_line(vsal);
+	dbms_output.put_line(vjob);
+	dbms_output.put_line(vhiredate);
+	dbms_output.put_line(vcomm);
+	dbms_output.put_line(vdeptno);
+	END;
+	/
+sample output:
+Info of 7654
+MARTIN
+1250
+SALESMAN
+28-SEP-81
+1400
+30
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+
+
+Ex:	
+	declare
+	veno int:=7654;
+	vname varchar2(20);
+	vsal number(5);
+	vjob varchar2(20);
+	vhiredate date;
+	vcomm number(4);
+	vdeptno number(3);
+	BEGIN
+	select ename,sal,job,hiredate,comm,deptno INTO
+		vname,vsal,vjob,vhiredate,vcomm,vdeptno
+	from emp
+	where empno=veno;
+	dbms_output.put_line
+	(' Info of Emp id:        7654');
+	dbms_output.put_line
+	('=============================================');
+	dbms_output.put_line('Name of emp: '||vname);
+	dbms_output.put_line('Salary of emp: '||vsal);
+	dbms_output.put_line('Designition of emp: '||vjob);
+	dbms_output.put_line('Join date of emp: '||vhiredate);
+	dbms_output.put_line('Commission of emp: '||vcomm);
+	dbms_output.put_line('Deptno of emp: '||vdeptno);
+	dbms_output.put_line('=============================================');
+	END;
+	/
+
+output:
+
+Info of 7654
+=============================================
+Name of emp: MARTIN
+Salary of emp: 1250
+Designition of emp: SALESMAN
+Join date of emp: 28-SEP-81
+Commission of emp: 1400
+Deptno of emp: 30
+=============================================
+
+PL/SQL procedure successfully completed.
+
+Ex: 
+Write a program to display number of customers from the city " Delhi " ?
+
+DECLARE
+VCITY   VARCHAR2(20):='Delhi';
+CUST_CNT  INT;
+BEGIN
+SELECT COUNT(*) INTO CUST_CNT 
+FROM CUST_DTLS 
+WHERE CITY=VCITY;
+DBMS_OUTPUT.PUT_LINE
+(' NUMBER OF CUSTOMERS FROM '||VCITY||' = '||CUST_CNT);
+END;
+
+
+Ex:	
+Write  a program to display number of male customers and number 
+of female customers?
+
+	declare
+	male_cnt	int;
+	female_cnt	int;
+	begin
+	select count(*) into male_cnt from cust_dtls where gender='M';
+	select count(*) into female_cnt from cust_dtls where gender='F';
+	dbms_output.put_line(' Number of males= '||male_cnt);
+	dbms_output.put_line(' Number of Females='||female_cnt);
+	end;
+
+
+Assignments:
+
+1) Write a program to display designition of empid 7788?
+
+2) Write a program to display the city and mobile number of customer id " cust-5"?
+
+3) Write a program to display the location of department " RESEARCH "?
+
+	
+	
+
+Dynamic Progarms:
+*****************
+
+By using & (Substitution operator) operator we will make a program 
+as a dynamic program.
+Instead of assigning a constant value in to a variable , While the 
+execution of the program, the program has to take a value from the 
+end user and that value stored it into a variable.
+
+varname:='&varname';
+
+
+Ex:	
+write a program to display the details of employee for the 
+given empno?
+
+	declare
+	v_eno number(4);
+	v_ename varchar2(20); 
+	v_sal number(5);
+	v_job varchar2(20);
+	v_jdate date;
+	v_comm  number(5);
+	V_dno int;
+	BEGIN
+	v_eno:='&v_eno';
+	select ename,sal,job,hiredate,nvl(comm,0),deptno 
+		INTO 
+		v_ename,v_sal,v_job,v_jdate,v_comm,v_dno
+	from emp
+	where empno=v_eno;
+	
+dbms_output.put_line
+(chr(10)||' Details of emp id:      '||v_eno||chr(10)||
+'-----------------------------------------'||chr(10)||
+'Name:      '||v_ename||chr(10)||
+'Working with  Salary:     '||v_sal||chr(10)||
+'Working   as  :       '||v_job||chr(10)||
+'Joined   on:    '||v_jdate||chr(10)||
+'Getting  Commission:    '||v_comm||chr(10)||
+'Working under:    '||v_dno
+);
+end;
+
+
+Ex:	
+Write a program to display the number of emps in the given deptno?
+
+	declare
+	vdno        number(2);
+	e_count    int;
+	begin
+	vdno:='&vdno';
+	select count(empno) into e_count 
+	from emp 
+	where deptno=vdno;
+	dbms_output.put_line
+	(' number of emps in Department : '||vdno||'   = '||e_count);
+	end;
+
+
+
+output:
+
+ number of emps in 20 = 5
+
+Ex:
+number of emps in 30 = 6
+
+
+
+Ex:	write a program to display the dept details under which the employee is working with given id?
+
+	declare
+	veno	number(4);
+	vdno	number(4);
+	vdname	varchar2(20);
+	vloc	varchar2(20);
+	begin
+	veno:=&veno;
+	select * into vdno,vdname,vloc from dept
+	where deptno=(select deptno from emp where empno=veno);
+	dbms_output.put_line(' department details of employee : '||veno);
+	dbms_output.put_line(vdno||'	'||vdname||'	'||vloc);
+	end;
+
+Ex output:
+ department details of employee : 7902
+20	RESEARCH	DALLAS
+
+Ex output:
+department details of employee : 7788
+20	RESEARCH	DALLAS
+
+
+Assignment:
+
+1) write a program to display the total salary i am paying
+	 to deptno 30 employees?
+
+2) write  a  program to display the "number of male 
+	customers" from the given city?
+
+3) Write a program to display the number of emps 
+	working under given deptno?
+
+4) write a program to find the number of emps
+	 working with given designition?
+
+5) Write a program to find and display total salary
+	 paying to given dept name?
+
+declare
+vdname   varchar2(20);
+tsal     number;
+begin
+vdname:='&vdname';
+select sum(sal) into tsal
+from emp
+where deptno=(select deptno from dept where dname=vdname);
+dbms_output.put_line(' Given dept name:  '||vdname);
+dbms_output.put_line(' Total Salary:    '||tsal);
+end;
+
+
+
+--------------------------------------------------------------------------------------------------------
+Ex: 
+
+declare
+vsal  number(4);
+vcnt  int;
+begin
+vsal:='&vsal';
+select count(*) into vcnt
+from emp
+where sal>vsal;
+dbms_output.put_line('Given salary: '||vsal);
+dbms_output.put_line
+(' Number of emps having more salary than given salary:  '||vcnt);
+end;
+
+Ex:
+write a program to display total funds under given act_type?
+
+declare
+v_act_type  varchar2(10);
+v_funds   number(8,2);
+begin
+v_act_type:='&v_act_type';
+select sum(act_bal) into v_funds
+from cust_act_dtls
+where act_type=v_act_type;
+dbms_output.put_line
+(' Account Type: '||v_act_type);
+dbms_output.put_line
+(' Total Funds: '||v_funds);
+end;
+
+Ex: 
+Writea program to insert a record into dept table?
+
+declare
+vdno  int;
+vdname varchar2(20);
+vloc varchar2(10);
+begin
+vdno:='&vdno';
+vdname:='&vdname';
+vloc:='&vloc';
+insert into dept values
+(vdno,vdname,vloc);
+dbms_output.put_line
+(' New dept launched');
+end;
+
+Ex:
+write a program to display product details with company name
+from given product code?
+
+declare
+vpid   varchar2(10);
+prodname  varchar2(10);
+cost   number(7,2);
+warrenty  varchar2(10);
+compname  varchar2(20);
+begin
+vpid:='&vpid';
+select p.prod_name,p.cost,p.warrenty,c.comp_name
+into
+prodname,cost,warrenty,compname
+from prod_dtls p, comp_dtls c
+where prod_code=vpid
+and
+p.comp_code=c.comp_code;
+dbms_output.Put_line
+(chr(10)||
+'Given product code:    '||vpid||chr(10)||
+'-------------------------------'||chr(10)||
+'Product Name:      '||prodname||chr(10)||
+'Price:             '||cost  ||chr(10)||
+'Warrenty:          '||warrenty||chr(10)||
+'Company Name:      '||compname
+);
+end;
+/
+
+
+

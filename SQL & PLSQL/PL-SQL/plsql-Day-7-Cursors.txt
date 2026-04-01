@@ -1,0 +1,854 @@
+
+			CURSORS
+			********
+It is a pointer to temp memory , to perform intermediate 
+operations before output send to the client user.
+
+Types of cursors:  2
+
+1) Implicit cursor:
+***************		
+A cursor which is used by each sql query. 
+This type can be assigned and managed by DB engine.
+
+Properties:
+*********
+SQL%ISOPEN	
+It returns true if the file is opened for processing.
+
+SQL%FOUND	
+It returns true if  matched data found.
+
+SQL%NOTFOUND	
+It returns true if there is no matched data.
+
+SQL%ROWCOUNT	
+It returns an integer value which represents the 
+number of affected records.
+
+
+   2) Explicit cursors:
+   --------------------
+   Explicit cursors are useful to display multiple records from 
+   the table using program or procedure.
+   Explicit cursors are defined and managed by programmer. 
+	
+  To use explicit cursor do the following.
+
+   i) declare and define the cursor in DECLARE block
+
+   syntax:
+	CURSOR  <cursor_name>  
+	IS  
+	SELECT . . . . . . . . . . . . 
+	from  <tbl1>,<tbl2>,....
+	where <cond1> and/or . 
+	order by . . . . . . . . . . ;
+
+   Ex:	cursor mgrcur	
+	is 
+	select * from emp 
+	where job='MANAGER';
+
+
+   ii) Open cursor, in BEGIN block
+
+   syn:	OPEN <cur_name>;
+
+   Ex:	OPEN  mgrcur;
+
+
+
+   iii) Fetch  values/records from cursor, in begin block
+
+   syntax:
+	FETCH <cur_name> INTO <varname>;
+
+   Note: 
+   At a time Fetch will take only one record from cursor.
+   So do the fetch operation repeatedly until all records are
+   fetched.
+
+	
+   Ex:	LOOP
+	FETCH mgrcur INTO REC;
+	stmt;
+	stmt;
+	EXIT  WHEN (mgrcur%NOTFOUND);
+	stmt;
+	stmt;
+	END LOOP;
+
+   iv) Close the cursor. Then it will release memory occupied by cursor.
+
+   syntax:
+	CLOSE <cur_name>;
+
+   Ex:	close mgrcur;
+
+
+   properties:-
+   *********
+   Explicit cursor property name begin with cursor name.
+
+   <cur_name>%ISOPEN	
+   It returns true if the file is opened for processing
+
+   <cur_name>%FOUND	
+   It returns true if there exits matched data
+
+   <cur_name>%NOTFOUND	
+   It returns true if there is no matched data
+
+   <cur_name>%ROWCOUNT	
+   It returns an integer value represents number of effected 
+   records.
+
+----------------------------------------------------------------------------
+
+Ex:
+write a procedure to find the number of records affected  
+if the emps are updated for the given job category with given 
+increment in their salary with in the table empcp?
+
+	
+	create or replace procedure proc_update
+	( vjob IN  empcp.job%type, incr IN  int)
+	is
+	begin
+	update empcp  
+	set sal=sal+((incr*sal)/100) 
+	where job=vjob;
+	if (sql%found) then
+	dbms_output.put_line(' updation is successfull');
+	dbms_output.put_line
+	(' number of records updated=    '||sql%rowcount);
+	else
+	dbms_output.put_line('updation is Failed');
+	dbms_output.put_line
+	(' number of records updated=   '||sql%rowcount);
+	end if;
+	end proc_update;
+  
+EX:
+cu
+PRICE			tax
+
+<10000			12%
+>=10000 & <20000	18%
+>=20000 & <40000	22%
+>=40000 & <50000	25%
+>=50000			28%
+
+if (cost<10000)then
+update  prod_dtls
+set cost=cost+(0.12*cost);
+
+--------------------------------------------------------------------------------------------------------
+Ex:	
+-->write a procedure to display employee details working
+-->under given deptno?
+
+	/* Procedure with Explicit Cursor */
+
+	create or replace procedure proc_emp_dtls_dno 
+	(vdno emp.deptno%type)
+	is
+	cursor emp_cur
+	is 
+	select * from emp where deptno=vdno;
+	vrec   emp%rowtype;
+	begin
+	open emp_cur;
+	dbms_output.put_line
+	(' Details of emps under the deptno: '||vdno);
+	dbms_output.put_line
+	('--------------------------------------------------------');
+	loop
+	fetch emp_cur into vrec;
+	exit when emp_cur%notfound;
+	dbms_output.put_line
+	(vrec.empno||' ; '||vrec.ename||';'||vrec.sal||';'||
+	vrec.job||';'||vrec.hiredate||';'||vrec.deptno);
+	end loop;
+	dbms_output.put_line
+	(chr(10)||
+                  ' Number of emps :  '||emp_cur%rowcount);
+	close emp_cur;
+	end proc_emp_dtls_dno;
+
+
+EX: 	
+WRITE A PROCEDURE TO DISPLAY EMP NAMES AND SALARIES 
+FOR GIVEN  JOB OF EMPS?
+
+CREATE OR REPLACE PROCEDURE PROC_EMPS_JOB
+  (
+  VJOB  EMP.JOB%TYPE
+  )
+  IS
+  cursor c_job is select ename,sal from emp where job=vjob;
+  vename  emp.ename%type;
+  vsal   emp.sal%type;
+  begin
+  open c_job;
+ dbms_output.put_line(' Given job:  '||vjob);
+  dbms_output.put_line('===============================');
+  loop
+ fetch c_job into vename,vsal;
+ exit when c_job%notfound;
+  dbms_output.put_line('Ename:   '||vename||'Emp sal: '||vsal);
+  end loop;
+ close c_job;
+  end proc_emps_job;
+  /
+
+Procedure created.
+
+SQL> exec proc_emps_job('CLERK');
+Given job:  CLERK
+===============================
+Ename:   SMITHEmp sal: 840
+Ename:   ADAMSEmp sal: 2100
+Ename:   JAMESEmp sal: 997.5
+Ename:   MILLEREmp sal: 1365
+
+PL/SQL procedure successfully completed.
+
+SQL> exec proc_emps_job('MANAGER');
+Given job:  MANAGER
+===============================
+Ename:   JONESEmp sal: 2975
+Ename:   BLAKEEmp sal: 2850
+Ename:   CLARKEmp sal: 2450
+
+PL/SQL procedure successfully completed.
+
+SQL> exec proc_emps_job('SALESMAN');
+Given job:  SALESMAN
+===============================
+Ename:   ALLENEmp sal: 1840
+Ename:   WARDEmp sal: 1437.5
+Ename:   MARTINEmp sal: 4600
+Ename:   TURNEREmp sal: 1725
+
+PL/SQL procedure successfully completed.
+
+ex:
+write procedure to display employee details from given dept name?
+
+create or replace procedure proc_emp_info
+(vdname in dept.dname%type)
+is
+CURSOR  emp_cur
+is
+select * from emp
+where deptno=
+(select deptno from dept where dname=vdname);
+vrec  emp%rowtype;
+begin  
+open emp_cur;
+dbms_output.put_line
+(' given dept name:   '||vdname);
+dbms_output.put_line
+('--------------------------------------------------------------------------------------');
+dbms_output.put_line
+('empid	empname        sal        job        hiredate        comm       deptno');	
+dbms_output.put_line
+('--------------------------------------------------------------------------------------');
+loop
+fetch emp_cur into vrec;
+exit when emp_cur%notfound;
+dbms_output.put_line
+(vrec.empno||'     '||vrec.ename||'      '||vrec.sal||'   '||vrec.job||
+'     '||vrec.hiredate||'     '||vrec.comm||'     '||vrec.deptno);
+end loop;
+dbms_output.put_line
+(chr(10)||
+'Number of emps selected:   '||emp_cur%rowcount);
+close emp_cur;
+end proc_emp_info;
+/
+
+
+Ex:
+--write a procedure to display products info based on given prod name?
+
+create or replace procedure
+proc_prod_info(vpname  varchar2)
+is
+cursor prodcur  is
+select cost,warrenty,comp_code
+from prod_dtls 
+where prod_name=vpname;
+vcost   prod_dtls.cost%type;
+vwarr  varchar2(20);
+vcmpcode  prod_dtls.comp_code%type;
+begin
+open prodcur;
+dbms_output.put_line(chr(10)||
+'Product Name:     cost:     warrenty:      comp_code'||chr(10)||
+'--------------------------------------------------------------------'
+);
+loop
+fetch prodcur into vcost,vwarr,vcmpcode;
+exit when prodcur%notfound;
+dbms_output.put_line
+(vpname||'    '||vcost||'    '||vwarr||'  '||vcmpcode);
+end loop;
+close prodcur;
+end proc_prod_info;
+/
+
+=============================================
+
+
+   CURSOR TYPE RECORD VARIABLE :
+   *****************************
+   We can declare a variable as a cursor type record variable
+   by using %ROWTYPE.
+   We can store 1 record in to this variable , from cursor.
+
+   syntax:
+	var   <cursor_name>%rowtype;
+
+ex:
+	vrec    c%rowtype;
+
+	fetch c into vrec;
+
+
+
+   Ex:	
+   write a procedure to display the employee details along with 
+   dept info from given deptno?
+
+	/* Procedure with Explicit Cursor */
+
+   create or replace procedure proc_emp_dept_dtls
+   (vdno  IN emp.deptno%type)
+   is
+   cursor c 
+   is 
+   select e.empno,e.ename,e.sal,e.job,d.* 
+   from emp e, dept d
+   where e.deptno=vdno 
+   and 
+   e.deptno=d.deptno;
+
+/* Declaring Cursor type variable   */
+
+	c_rec      c%rowtype;  
+	begin
+	open c;
+	dbms_output.put_line
+	(' Details of emps under the deptno:     '||vdno);
+	dbms_output.put_line
+	(' ----------------------------------------------------');
+	loop
+	fetch c into c_rec;
+	exit when c%notfound;
+	dbms_output.put_line
+	(c_rec.empno||' ; '||c_rec.ename||' ; '||c_rec.sal||' ; '||
+	c_rec.job||' ; '||c_rec.deptno||' ; '||c_rec.dname||' ; '||
+	c_rec.loc); 
+	end loop;
+	close c;
+	end proc_emp_dept_dtls;
+
+
+
+
+Ex:	
+write a procedure to display the employee details working with
+given job?
+
+	create or replace procedure proc_emp_info_with_givenjob( vjob  emp.job%type)
+	is
+	cursor c_emp  is select * from emp where job=vjob;
+	r	emp%rowtype;
+
+	begin
+	open c_emp;
+	dbms_output.put_line(' the given job title:  '||vjob);
+	dbms_output.put_line('all  '||vjob||' information');
+	LOOP
+	FETCH c_emp INTO r;
+	exit when (c_emp%notfound);
+	dbms_output.put_line(r.empno||' '||r.ename||' '||r.job||' '||r.sal||' '||r.hiredate||' '||r.deptno);
+	end loop;
+	close c_emp;
+	end proc_emp_info_with_givenjob;
+
+
+sample output:
+
+PROCEDURE PROC_EMP_INFO_GIVENJOB compiled
+anonymous block completed
+ the given job title:  MANAGER
+all  MANAGER information
+7566 JONES MANAGER 3272.5 02-APR-81 20
+7698 BLAKE MANAGER 3135 01-MAY-81 30
+7782 CLARK MANAGER 2695 09-JUN-81 10
+
+PROCEDURE PROC_EMP_INFO_GIVENJOB compiled
+anonymous block completed
+ the given job title:  SALESMAN
+all  SALESMAN information
+7499 ALLEN SALESMAN 1600 20-FEB-81 30
+7521 WARD SALESMAN 1250 22-FEB-81 30
+7654 MARTIN SALESMAN 1250 28-SEP-81 30
+7844 TURNER SALESMAN 1500 08-SEP-81 30
+
+
+
+
+EX:
+write a procedure to display employee details 
+( empno,ename,sal,desg,deptno) who is working 
+under given dept name?
+
+
+
+CREATE OR REPLACE PROCEDURE PROC_EMP_DTLS_DNAME
+(VDNAME  VARCHAR2)
+IS
+CURSOR C_EMP 
+IS 
+SELECT EMPNO,ENAME,SAL,JOB,DEPTNO FROM EMP
+WHERE DEPTNO=(SELECT DEPTNO FROM DEPT WHERE DNAME=VDNAME);
+
+--CURSOR BASED RECORD TYPE VARIABLE
+
+REC  C_EMP%ROWTYPE;
+BEGIN
+OPEN C_EMP;
+DBMS_OUTPUT.PUT_LINE(VDNAME ||'  DEPARTMENT EMPLOYEE DETAILS ');
+DBMS_OUTPUT.PUT_LINE('----------------------------------------------');
+LOOP
+FETCH C_EMP INTO REC;
+EXIT WHEN C_EMP%NOTFOUND;
+DBMS_OUTPUT.PUT_LINE(' EMP ID:   '||REC.EMPNO);
+DBMS_OUTPUT.PUT_LINE(' EMP NAME:   '||REC.ENAME);
+DBMS_OUTPUT.PUT_LINE(' EMP SALARY:   '||REC.SAL);
+DBMS_OUTPUT.PUT_LINE(' EMP DESG:   '||REC.JOB);
+DBMS_OUTPUT.PUT_LINE(' EMP DEPTNO:   '||REC.DEPTNO);
+DBMS_OUTPUT.PUT_LINE(' --------------------------------');
+END LOOP;
+DBMS_OUTPUT.PUT_LINE
+(CHR(10)||'Total number of emps: '||c_emp%rowcount);
+CLOSE C_EMP;
+END PROC_EMP_DTLS_DNAME;
+
+SAMPLE OUTPUT:
+
+anonymous block completed
+SALES  DEPARTMENT EMPLOYEE DETAILS 
+----------------------------------------------
+ EMP ID:   7499
+ EMP NAME:   ALLEN
+ EMP SALARY:   1600
+ EMP DESG:   SALESMAN
+ EMP DEPTNO:   30
+ --------------------------------
+ EMP ID:   7521
+ EMP NAME:   WARD
+ EMP SALARY:   1250
+ EMP DESG:   SALESMAN
+ EMP DEPTNO:   30
+ --------------------------------
+ EMP ID:   7654
+ EMP NAME:   MARTIN
+ EMP SALARY:   1250
+ EMP DESG:   SALESMAN
+ EMP DEPTNO:   30
+ --------------------------------
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+Ex:	write a procedure to display the employee names and salaries, their department names and 	locations?
+
+	create or replace procedure proc_emp_dept is
+	cursor c1 is select e.ename,e.sal,d.dname,d.loc from  emp e,dept d where e.deptno=d.deptno;
+	cur_rec	c1%rowtype; /* DECLARING CURSOR TYPE VARIABLE */
+	begin
+	open c1;
+dbms_output.put_line
+('EMP-NAME	EMP-SALARY	Department name	department-Location');
+dbms_output.put_line
+('=========	==========	===========	===================');
+	LOOP
+	FETCH c1 INTO cur_rec;
+	EXIT WHEN (c1%notfound);
+	dbms_output.put_line(cur_rec.ename||'		'
+					||cur_rec.sal||'		'
+					||cur_rec.dname||'		'
+					||cur_rec.loc);
+	end loop;
+	close c1;
+	end proc_emp_dept;
+
+
+NOTE:
+	cursor type variable will supports all columns with in the cursor. No matter the columns are from which table.
+
+========================================================================================================================
+sample output:
+
+EMP-NAME		EMP-SALARY	Department name		department-Location
+=========		==========	===============		===================
+SMITH	 	    800		    	    RESEARCH		    DALLAS
+ALLEN	 	    1600		    SALES		    CHICAGO
+WARD	 	    1250		    SALES		    CHICAGO
+JONES	 	    2975		    RESEARCH		    DALLAS
+MARTIN	 	    1250		    SALES		    CHICAGO
+BLAKE	 	    2850		    SALES		    CHICAGO
+CLARK	 	    2450		    ACCOUNTING		    NEW YORK
+SCOTT	 	    3000		    RESEARCH		    DALLAS
+KING	 	    5000		    ACCOUNTING		    NEW YORK
+TURNER	 	    1500		    SALES		    CHICAGO
+ADAMS	 	    1100		    RESEARCH		    DALLAS
+JAMES	 	    950		    		SALES		    CHICAGO
+FORD	 	    3000		    RESEARCH		    DALLAS
+MILLER	 	    1300		    ACCOUNTING		    NEW YORK
+dinesh	 	    3400		    OPERATIONS		    BOSTON
+
+------------------------------------------------------------------------------------------------------------------------
+Ex:	
+--Write a procedure to display customer name,city, actno,
+ balance,act_name of all customers?
+
+create or replace procedure proc_cust_act_info
+is
+cursor c_acts is select cd.cname,cd.city,cad.actno,cad.act_bal,at.act_name
+                   from cust_dtls cd, cust_act_dtls cad, act_types at
+                     where cd.cno=cad.cust_code  and cad.act_type=at.act_type;
+                     
+rec c_acts%rowtype;  
+/* Declaring a cursor based variable , supports all columns from cursor */
+begin
+open c_acts;
+dbms_output.put_line
+(' Customers and their Accounts information ');
+dbms_output.put_line
+('CustName---custCity--- Account No:   Account Bal    Account Name');
+dbms_output.put_line
+('-----------------------------------------------------------------');
+loop
+fetch c_acts into rec;
+EXIT when (c_acts%notfound);
+dbms_output.put_line(rec.cname||'----'||rec.city||'---'||rec.actno||'    '||rec.Act_bal||'    '||rec.act_name);
+end loop;
+close c_acts;
+end proc_cust_act_info;
+
+exec proc_cust_act_info;	
+
+-----------------------------------------------------------------------
+Ex:
+write a procedure to display product name,cost,warr and 
+comp name from given comp name?
+
+create or replace procedure proc_prod_dtls
+(vcmpname comp_dtls.comp_name%type)
+is
+cursor prod_cur
+is
+select p.prod_name,p.cost,p.warrenty,c.comp_name
+from prod_dtls p,comp_dtls c
+where c.comp_name=vcmpname
+and
+c.comp_code=p.comp_code;
+r  prod_cur%rowtype;
+begin
+open prod_cur;
+dbms_output.put_line
+(vcmpname||' product details');
+dbms_output.put_line
+('----------------------------------------------');
+loop
+fetch prod_cur into r;
+exit when prod_cur%notfound;
+dbms_output.put_line
+(chr(10)||' Prod Name:'||r.prod_name||chr(10)||
+'Cost:  '||r.cost||chr(10)||'Warrenty:   '||r.warrenty||chr(10)||
+'Comp Name:  '||r.comp_name
+);
+end loop;
+dbms_output.put_line
+(' Number of products selected:  '||prod_cur%rowcount);
+close prod_cur;
+end proc_prod_dtls;
+
+Ex:
+
+create or replace procedure PROC_act_info_from_acttype
+(vacttype   cust_act_dtls.act_type%type)
+is
+CURSOR   custcur
+is
+select  cd.cname,cd.city,
+            cad.actno,at.act_name,cad.act_bal
+ from  cust_dtls cd,cust_act_dtls cad,act_types at
+where cad.act_type=vacttype
+and
+( cd.cno=cad.cno   and   cad.act_type=at.act_type);
+vrec   custcur%rowtype;
+BEGIN
+open  custcur ;
+loop
+fetch  custcur    into    vrec;
+exit   when  custcur%notfound;
+dbms_output.put_line
+(chr(10)||
+vrec.cname||'   '||vrec.city    ||'   '||
+vrec.actno  ||'   '||vrec.act_name||'   '||
+vrec.act_bal
+);
+end loop;
+close  custcur;
+end proc_act_info_from_acttype;
+/
+
+
+
+EX:
+
+create or replace procedure PROC_acts_info
+(vacttype   cust_act_dtls.act_type%type)
+is
+CURSOR   custcur
+is
+select  cd.cname,cd.city,
+            cad.actno,at.act_name,cad.act_bal
+ from  cust_dtls cd,cust_act_dtls cad,act_types at
+where cad.act_type=vacttype
+and
+( cd.cno=cad.cno   and   cad.act_type=at.act_type);
+vrec   custcur%rowtype;
+vtotalbal  number;
+BEGIN
+open  custcur ;
+dbms_output.put_line
+(' Given account type:    '||vacttype||chr(10)||
+'customers info from this account type:  '||chr(10)||
+'******************************************************'||chr(10)||
+'custname    city    accountno  account name    balance'||chr(10)||
+'******************************************************'
+);
+loop
+fetch  custcur    into    vrec;
+exit   when  custcur%notfound;
+dbms_output.put_line
+(chr(10)||
+vrec.cname||'   '||vrec.city    ||'   '||
+vrec.actno  ||'   '||vrec.act_name||'   '||
+vrec.act_bal
+);
+end loop;
+dbms_output.put_line
+(chr(10)||' Number of customers:   '||custcur%rowcount);
+select sum(act_bal) into vtotalbal
+from cust_act_dtls
+where act_type=vacttype;
+dbms_output.put_line
+(chr(10)||' Total Balance:   '||vtotalbal);
+close  custcur;
+end proc_acts_info;
+
+exec proc_acts_info('SB');
+exec proc_acts_info('SAL');
+exec proc_acts_info('DEMAT');
+----------------------------------------------------------------------------
+
+FOR LOOP CURSOR:
+****************
+we can display multiple records by using for loop.
+In this loop, for loop variable is known as explicit 
+cursor type variable.
+But here , we are unable to specify limit for number
+of records selected.
+
+
+
+--> write a procedure to display all dept details?
+
+create or replace procedure proc_dept_info
+is
+begin
+for drec in (select * from dept)
+loop
+dbms_output.put_line
+(drec.deptno||'---'||drec.dname||'---'||drec.loc);
+end loop;
+end proc_dept_info;
+
+
+--> write a procedure to display customer details using
+       FOR LOOP cursor?
+
+create or replace procedure proc_cust_info
+is
+begin
+for vrec in (select * from cust_dtls)
+loop
+dbms_output.put_line
+(vrec.cno||'---'||vrec.cname||'---'||vrec.gender||'---'||vrec.city);
+end loop;
+end proc_cust_info;
+
+----------------------------------------------------------------------------------------------
+
+PL/SQL Parameterized Cursor
+************************
+PL/SQL Parameterized cursor pass the parameters into a 
+cursor and use them in to query.
+Parameterized cursors are also known as static cursors since,
+we should pass  parameter value when will cursor is opened.
+
+
+Ex:
+write a program to display emp details from given deptno?
+
+DECLARE
+  cursor c(vdno number) 
+  is 
+  select * from emp
+  where deptno = vdno;
+ vrec   emp%rowtype;
+BEGIN 
+  OPEN c(10);
+loop
+fetch c into vrec;
+exit when c%notfound;
+dbms_output.put_line
+(
+'empid:   '||vrec.empno||'  Empname:  '||vrec.ename||
+' emp sal:  '||vrec.sal||'  deptno:  '||vrec.deptno
+);
+end loop;
+close c;
+  end;
+
+
+
+EX:
+write a program to display employee details from given
+empid using parameterized cursor?
+
+
+DECLARE
+  cursor c(no number) 
+  is 
+  select * from emp
+  where empno = no;
+  tmp    emp%rowtype;
+BEGIN 
+  OPEN c(7654);
+  FETCH C INTO TMP;
+  dbms_output.put_line('EMP_No:    '||tmp.empno);
+  dbms_output.put_line('EMP_Name:  '||tmp.ename);
+  dbms_output.put_line('EMP_Dept:  '||tmp.deptno);
+  dbms_output.put_line('EMP_Salary:'||tmp.sal);      
+  CLOSE c;
+END;  
+----------------------------------------------------------------------------
+
+REF CURSOR:
+***********
+ Oracle 7.3 the REF CURSOR type has been available to allow 
+recordsets to be returned from stored procedures and functions. 
+Oracle 9i introduced the predefined SYS_REFCURSOR.
+
+syn:
+argname     OUT    SYS_REFCURSOR
+
+Ex:
+write a procedure to return to the program?
+And display the dept details from program?
+
+
+CREATE OR REPLACE  PROCEDURE get_dept_rs 
+( p_recordset    OUT    SYS_REFCURSOR) 
+AS 
+BEGIN 
+  OPEN p_recordset FOR
+    SELECT   *    FROM dept;    
+END Get_dept_RS;
+
+
+
+
+
+DECLARE
+  V_cursor  SYS_REFCURSOR;
+  vdept       dept%rowtype;
+BEGIN
+  get_dept_rs( V_cursor);
+  DBMS_OUTPUT.PUT_LINE
+  (chr(10)||'Department table records:  ');          
+  LOOP 
+    FETCH   V_cursor      INTO  vdept;
+    EXIT WHEN V_cursor%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE
+(vdept.deptno || ' | ' || vdept.dname || ' | ' || vdept.loc);
+  END LOOP;
+  CLOSE V_cursor;
+END;
+
+-------------------------------------------------------------------------------------
+Ex:
+write a procedure to display customer name,account name,account number, and account balance of all customers?
+
+create or replace procedure proc_cust_act_info
+is
+cursor cust_cursor
+is
+select cd.cname,at.act_name,cad.actno,cad.act_bal
+from cust_dtls cd,act_types at,cust_act_dtls cad
+where cd.cno=cad.cno
+and
+cad.act_type=at.act_type;
+vcur   cust_cursor%rowtype;
+begin
+open cust_cursor;
+dbms_output.put_line
+(chr(10)||' customer and his account info:   '||chr(10)||
+'-----------------------------------------------------');
+loop
+fetch cust_cursor into vcur;
+exit when cust_cursor%notfound;
+dbms_output.put_line
+(chr(10)||
+'Cust Name:   '||vcur.cname||chr(10)||
+'A/c Name:    '||vcur.act_name||chr(10)||
+'A/c.No:         '||vcur.actno||chr(10)||
+'Balance:       '||vcur.act_bal
+);
+end loop;
+dbms_output.put_line
+('Number of accounts selected:    '||cust_cursor%rowcount);
+close cust_cursor;
+end proc_cust_act_info;
+--------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
