@@ -1,0 +1,3 @@
+"header_id","TRX_number","Customer_trx_id","BillingDate","BillToCustomerNumber","BusinessUnit","Comments","DueDate","InternalNotes","InvoiceCurrencyCode","PaymentTerms","TransactionDate","TransactionSource","TransactionType","ShipToCustomerName","ShipToCustomerNumber","Error_type","Error_detail","Status"
+1,"f","222","2025-03-04","186354","ORA_BU","Test comments","2025-10-10","Test internal notes","SAR","15 Net","2025-03-04","Manual","Invoice","null","403882","222805","null",""
+2,"v","544","2025-03-04","186354","ORA_BU","Test comments","2025-10-10","Test internal notes","SAR","15 Net","2025-03-04","Manual","Invoice","null","403882","222805","null",""

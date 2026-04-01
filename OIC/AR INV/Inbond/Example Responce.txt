@@ -1,0 +1,637 @@
+{
+  "CustomerTransactionId": 300000042305952,
+  "DueDate": "2025-10-10",
+  "ConversionDate": null,
+  "ConversionRate": null,
+  "InvoiceCurrencyCode": "SAR",
+  "SpecialInstructions": null,
+  "CrossReference": null,
+  "DocumentNumber": null,
+  "TransactionNumber": "1390049",
+  "TransactionDate": "2025-03-04",
+  "TransactionType": "Invoice",
+  "TransactionSource": "Manual",
+  "BillToCustomerNumber": "186354",
+  "BillToSite": "179599",
+  "Comments": "Test comments",
+  "InternalNotes": "Test internal notes",
+  "PaymentTerms": "15 Net",
+  "LegalEntityIdentifier": "ORA_LEGAL_ENTITY",
+  "ConversionRateType": null,
+  "PurchaseOrder": null,
+  "PurchaseOrderDate": null,
+  "PurchaseOrderRevision": null,
+  "FirstPartyRegistrationNumber": null,
+  "ThirdPartyRegistrationNumber": null,
+  "InvoicingRule": null,
+  "ShipToCustomerName": "ORA CUSTOMER",
+  "ShipToCustomerNumber": "403882",
+  "BillingDate": "2025-03-04",
+  "BillToPartyId": null,
+  "BusinessUnit": "ORA_BU",
+  "InvoiceStatus": "Complete",
+  "AccountingDate": null,
+  "ShipToSite": "222805",
+  "PayingCustomerName": null,
+  "PayingCustomerSite": null,
+  "BillToCustomerName": null,
+  "FreightAmount": null,
+  "Carrier": null,
+  "ShipDate": null,
+  "ShippingReference": null,
+  "BillToContact": null,
+  "ShipToContact": null,
+  "PrintOption": null,
+  "CreatedBy": "JESSY.BROWN",
+  "CreationDate": "2025-03-05T05:33:00.001+00:00",
+  "LastUpdatedBy": "JESSY.BROWN",
+  "LastUpdateDate": "2025-03-05T05:33:00.687+00:00",
+  "PayingCustomerAccount": null,
+  "SoldToPartyNumber": null,
+  "RemitToAddress": null,
+  "DefaultTaxationCountry": "SA",
+  "EnteredAmount": null,
+  "InvoiceBalanceAmount": null,
+  "Prepayment": null,
+  "Intercompany": null,
+  "DocumentFiscalClassification": null,
+  "BankAccountNumber": null,
+  "CreditCardAuthorizationRequestIdentifier": null,
+  "CreditCardExpirationDate": null,
+  "CreditCardIssuerCode": null,
+  "CreditCardTokenNumber": null,
+  "CreditCardVoiceAuthorizationCode": null,
+  "CreditCardErrorCode": null,
+  "CreditCardErrorText": null,
+  "CardHolderLastName": null,
+  "CardHolderFirstName": null,
+  "ReceiptMethod": null,
+  "SalesPersonNumber": null,
+  "StructuredPaymentReference": null,
+  "InvoicePrinted": "N",
+  "LastPrintDate": null,
+  "OriginalPrintDate": null,
+  "DeliveryMethod": null,
+  "Email": null,
+  "AllowCompletion": null,
+  "ControlCompletionReason": null,
+  "receivablesInvoiceLines": [
+    {
+      "CustomerTransactionLineId": 300000042305953,
+      "LineNumber": 1,
+      "Description": "Item",
+      "Quantity": 1,
+      "UnitSellingPrice": 1,
+      "TaxClassificationCode": "ORA SA-VAT15%",
+      "SalesOrder": null,
+      "AccountingRuleDuration": null,
+      "RuleEndDate": null,
+      "RuleStartDate": null,
+      "AccountingRule": null,
+      "Warehouse": null,
+      "MemoLine": null,
+      "UnitOfMeasure": null,
+      "ItemNumber": null,
+      "AllocatedFreightAmount": null,
+      "AssessableValue": null,
+      "SalesOrderDate": null,
+      "LineAmount": null,
+      "CreatedBy": "JESSY.BROWN",
+      "CreationDate": "2025-03-05T05:33:00.640+00:00",
+      "LastUpdatedBy": "JESSY.BROWN",
+      "LastUpdateDate": "2025-03-05T05:33:00.695+00:00",
+      "TransacationBusinessCategory": null,
+      "UserDefinedFiscalClassification": null,
+      "ProductFiscalClassification": null,
+      "ProductCategory": null,
+      "ProductType": null,
+      "LineIntendedUse": null,
+      "LineAmountIncludesTax": null,
+      "TaxInvoiceDate": null,
+      "TaxInvoiceNumber": null,
+      "TaxExemptionCertificateNumber": null,
+      "TaxExemptionHandling": null,
+      "TaxExemptionReason": null,
+      "receivablesInvoiceLineTaxLines": [
+        {
+          "CustomerTransactionLineId": 300000042305954,
+          "CreatedBy": "JESSY.BROWN",
+          "CreationDate": "2025-03-05T05:33:00.657+00:00",
+          "LastUpdatedBy": "JESSY.BROWN",
+          "LastUpdateDate": "2025-03-05T05:33:00.698+00:00",
+          "TaxJurisdictionCode": null,
+          "TaxRate": null,
+          "TaxRateCode": "ORA SA-VAT15%",
+          "TaxRegimeCode": "ORA TAX REGIME",
+          "TaxStatusCode": null,
+          "Tax": null,
+          "TaxAmount": 0.015,
+          "TaxableAmount": null,
+          "TaxPointBasis": null,
+          "TaxPointDate": null,
+          "TaxLineNumber": null,
+          "PlaceOfSupply": null,
+          "TaxInclusiveIndicator": null,
+          "links": [
+            {
+              "rel": "self",
+              "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/child/receivablesInvoiceLineTaxLines/300000042305954",
+              "name": "receivablesInvoiceLineTaxLines",
+              "kind": "item",
+              "properties": {
+                "changeIndicator": "ACED0005737200136A6176612E7574696C2E41727261794C6973747881D21D99C7619D03000149000473697A65787000000001770400000001737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802000149000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000178"
+              }
+            },
+            {
+              "rel": "canonical",
+              "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/child/receivablesInvoiceLineTaxLines/300000042305954",
+              "name": "receivablesInvoiceLineTaxLines",
+              "kind": "item"
+            },
+            {
+              "rel": "parent",
+              "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953",
+              "name": "receivablesInvoiceLines",
+              "kind": "item"
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953",
+          "name": "receivablesInvoiceLines",
+          "kind": "item",
+          "properties": {
+            "changeIndicator": "ACED0005737200136A6176612E7574696C2E41727261794C6973747881D21D99C7619D03000149000473697A65787000000001770400000001737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802000149000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000178"
+          }
+        },
+        {
+          "rel": "canonical",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953",
+          "name": "receivablesInvoiceLines",
+          "kind": "item"
+        },
+        {
+          "rel": "parent",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952",
+          "name": "receivablesInvoices",
+          "kind": "item"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/exemptReasonCodes",
+          "name": "exemptReasonCodes",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/productCategories",
+          "name": "productCategories",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/userDefinedFiscClasses",
+          "name": "userDefinedFiscClasses",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/accountingRules",
+          "name": "accountingRules",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/transactionBizCategories",
+          "name": "transactionBizCategories",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/unitOfMeasures",
+          "name": "unitOfMeasures",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/taxExemptHandlingStatuses",
+          "name": "taxExemptHandlingStatuses",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/warehouses",
+          "name": "warehouses",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/itemNumbers",
+          "name": "itemNumbers",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/productTypes",
+          "name": "productTypes",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/productFiscClassifications",
+          "name": "productFiscClassifications",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/lov/memoLines",
+          "name": "memoLines",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/child/attachments",
+          "name": "attachments",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/child/receivablesInvoiceLineDFF",
+          "name": "receivablesInvoiceLineDFF",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/child/receivablesInvoiceLineGdf",
+          "name": "receivablesInvoiceLineGdf",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/child/receivablesInvoiceLineTaxLines",
+          "name": "receivablesInvoiceLineTaxLines",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305953/child/receivablesInvoiceLineTransactionDFF",
+          "name": "receivablesInvoiceLineTransactionDFF",
+          "kind": "collection"
+        }
+      ]
+    },
+    {
+      "CustomerTransactionLineId": 300000042305955,
+      "LineNumber": 2,
+      "Description": "Item",
+      "Quantity": 1,
+      "UnitSellingPrice": 1,
+      "TaxClassificationCode": "ORA SA-VAT15%",
+      "SalesOrder": null,
+      "AccountingRuleDuration": null,
+      "RuleEndDate": null,
+      "RuleStartDate": null,
+      "AccountingRule": null,
+      "Warehouse": null,
+      "MemoLine": null,
+      "UnitOfMeasure": null,
+      "ItemNumber": null,
+      "AllocatedFreightAmount": null,
+      "AssessableValue": null,
+      "SalesOrderDate": null,
+      "LineAmount": null,
+      "CreatedBy": "JESSY.BROWN",
+      "CreationDate": "2025-03-05T05:33:00.669+00:00",
+      "LastUpdatedBy": "JESSY.BROWN",
+      "LastUpdateDate": "2025-03-05T05:33:00.700+00:00",
+      "TransacationBusinessCategory": null,
+      "UserDefinedFiscalClassification": null,
+      "ProductFiscalClassification": null,
+      "ProductCategory": null,
+      "ProductType": null,
+      "LineIntendedUse": null,
+      "LineAmountIncludesTax": null,
+      "TaxInvoiceDate": null,
+      "TaxInvoiceNumber": null,
+      "TaxExemptionCertificateNumber": null,
+      "TaxExemptionHandling": null,
+      "TaxExemptionReason": null,
+      "receivablesInvoiceLineTaxLines": [
+        {
+          "CustomerTransactionLineId": 300000042305956,
+          "CreatedBy": "JESSY.BROWN",
+          "CreationDate": "2025-03-05T05:33:00.677+00:00",
+          "LastUpdatedBy": "JESSY.BROWN",
+          "LastUpdateDate": "2025-03-05T05:33:00.702+00:00",
+          "TaxJurisdictionCode": null,
+          "TaxRate": null,
+          "TaxRateCode": "ORA SA-VAT15%",
+          "TaxRegimeCode": "ORA TAX REGIME",
+          "TaxStatusCode": null,
+          "Tax": null,
+          "TaxAmount": 0.015,
+          "TaxableAmount": null,
+          "TaxPointBasis": null,
+          "TaxPointDate": null,
+          "TaxLineNumber": null,
+          "PlaceOfSupply": null,
+          "TaxInclusiveIndicator": null,
+          "links": [
+            {
+              "rel": "self",
+              "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/child/receivablesInvoiceLineTaxLines/300000042305956",
+              "name": "receivablesInvoiceLineTaxLines",
+              "kind": "item",
+              "properties": {
+                "changeIndicator": "ACED0005737200136A6176612E7574696C2E41727261794C6973747881D21D99C7619D03000149000473697A65787000000001770400000001737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802000149000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000178"
+              }
+            },
+            {
+              "rel": "canonical",
+              "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/child/receivablesInvoiceLineTaxLines/300000042305956",
+              "name": "receivablesInvoiceLineTaxLines",
+              "kind": "item"
+            },
+            {
+              "rel": "parent",
+              "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955",
+              "name": "receivablesInvoiceLines",
+              "kind": "item"
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "rel": "self",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955",
+          "name": "receivablesInvoiceLines",
+          "kind": "item",
+          "properties": {
+            "changeIndicator": "ACED0005737200136A6176612E7574696C2E41727261794C6973747881D21D99C7619D03000149000473697A65787000000001770400000001737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802000149000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000178"
+          }
+        },
+        {
+          "rel": "canonical",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955",
+          "name": "receivablesInvoiceLines",
+          "kind": "item"
+        },
+        {
+          "rel": "parent",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952",
+          "name": "receivablesInvoices",
+          "kind": "item"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/exemptReasonCodes",
+          "name": "exemptReasonCodes",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/productCategories",
+          "name": "productCategories",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/userDefinedFiscClasses",
+          "name": "userDefinedFiscClasses",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/accountingRules",
+          "name": "accountingRules",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/transactionBizCategories",
+          "name": "transactionBizCategories",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/unitOfMeasures",
+          "name": "unitOfMeasures",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/taxExemptHandlingStatuses",
+          "name": "taxExemptHandlingStatuses",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/warehouses",
+          "name": "warehouses",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/itemNumbers",
+          "name": "itemNumbers",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/productTypes",
+          "name": "productTypes",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/productFiscClassifications",
+          "name": "productFiscClassifications",
+          "kind": "collection"
+        },
+        {
+          "rel": "lov",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/lov/memoLines",
+          "name": "memoLines",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/child/attachments",
+          "name": "attachments",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/child/receivablesInvoiceLineDFF",
+          "name": "receivablesInvoiceLineDFF",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/child/receivablesInvoiceLineGdf",
+          "name": "receivablesInvoiceLineGdf",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/child/receivablesInvoiceLineTaxLines",
+          "name": "receivablesInvoiceLineTaxLines",
+          "kind": "collection"
+        },
+        {
+          "rel": "child",
+          "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines/300000042305955/child/receivablesInvoiceLineTransactionDFF",
+          "name": "receivablesInvoiceLineTransactionDFF",
+          "kind": "collection"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952",
+      "name": "receivablesInvoices",
+      "kind": "item",
+      "properties": {
+        "changeIndicator": "ACED0005737200136A6176612E7574696C2E41727261794C6973747881D21D99C7619D03000149000473697A65787000000001770400000001737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802000149000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B02000078700000000278"
+      }
+    },
+    {
+      "rel": "canonical",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952",
+      "name": "receivablesInvoices",
+      "kind": "item"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/billToCustomers",
+      "name": "billToCustomers",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/invoicingRules",
+      "name": "invoicingRules",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/transactionTypes",
+      "name": "transactionTypes",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/billToSites",
+      "name": "billToSites",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/taxationCountries",
+      "name": "taxationCountries",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/businessUnits",
+      "name": "businessUnits",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/transactionSources",
+      "name": "transactionSources",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/invoiceStatuses",
+      "name": "invoiceStatuses",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/deliveryMethodVA",
+      "name": "deliveryMethodVA",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/thirdPartyTaxRegistrationNumbers",
+      "name": "thirdPartyTaxRegistrationNumbers",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/PaymentTermsVA",
+      "name": "PaymentTermsVA",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/legalEntities",
+      "name": "legalEntities",
+      "kind": "collection"
+    },
+    {
+      "rel": "lov",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/lov/shipToCustomers",
+      "name": "shipToCustomers",
+      "kind": "collection"
+    },
+    {
+      "rel": "child",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/attachments",
+      "name": "attachments",
+      "kind": "collection"
+    },
+    {
+      "rel": "child",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/notes",
+      "name": "notes",
+      "kind": "collection"
+    },
+    {
+      "rel": "child",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceDFF",
+      "name": "receivablesInvoiceDFF",
+      "kind": "collection"
+    },
+    {
+      "rel": "child",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceDistributions",
+      "name": "receivablesInvoiceDistributions",
+      "kind": "collection"
+    },
+    {
+      "rel": "child",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceGdf",
+      "name": "receivablesInvoiceGdf",
+      "kind": "collection"
+    },
+    {
+      "rel": "child",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceInstallments",
+      "name": "receivablesInvoiceInstallments",
+      "kind": "collection"
+    },
+    {
+      "rel": "child",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceLines",
+      "name": "receivablesInvoiceLines",
+      "kind": "collection"
+    },
+    {
+      "rel": "child",
+      "href": "https://fa-epxp-test-saasfaprod1.fa.ocs.oraclecloud.com:443/fscmRestApi/resources/11.13.18.05/receivablesInvoices/300000042305952/child/receivablesInvoiceTransactionDFF",
+      "name": "receivablesInvoiceTransactionDFF",
+      "kind": "collection"
+    }
+  ]
+}

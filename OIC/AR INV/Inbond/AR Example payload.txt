@@ -1,0 +1,52 @@
+{"TransactionNumber":"04032025",
+    "BillingDate":"2025-03-04",
+    "BillToCustomerNumber":"186354",
+    "BusinessUnit":"ORA_BU",
+    "Comments":"Test comments",
+    "DueDate":"2025-10-10",
+    "InternalNotes":"Test internal notes",
+    "InvoiceCurrencyCode":"SAR",
+    "PaymentTerms":"15 Net",
+    "TransactionDate":"2025-03-04",
+    "TransactionSource":"Manual",
+    "TransactionType":"Invoice",
+    "ShipToCustomerName": null,
+  "ShipToCustomerNumber": "403882",
+    "ShipToSite": "222805",
+    "StructuredPaymentReference":null,
+    "receivablesInvoiceLines":[
+       {
+          "Description":"Item",
+          "LineNumber":1,
+            "UnitOfMeasure": null,
+          "Quantity":1,
+          "UnitSellingPrice":1,
+            "ItemNumber": null,
+          "TaxClassificationCode":"ORA SA-VAT15%",
+          "receivablesInvoiceLineTaxLines":[
+             {
+                "TaxAmount":0.015,
+                "TaxRegimeCode":"ORA TAX REGIME",
+                "TaxRateCode":"ORA SA-VAT15%"
+             }
+          ]
+       },
+       {
+          "Description":"Item",
+          "LineNumber":2,
+          "Quantity":1,
+            "UnitOfMeasure": null,
+          "UnitSellingPrice":1,
+            "ItemNumber": null,
+          "TaxClassificationCode":"ORA SA-VAT15%",
+          "receivablesInvoiceLineTaxLines":[
+             {
+                "TaxAmount":0.015,
+                "TaxRegimeCode":"ORA TAX REGIME",
+                "TaxRateCode":"ORA SA-VAT15%"
+             }
+          ]
+  
+       }
+    ]
+ }
