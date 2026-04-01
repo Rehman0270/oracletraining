@@ -1,0 +1,12 @@
+ =(  SELECT 
+       k.concatenated_segments
+FROM apps.per_all_people_f p,
+     apps.per_all_assignments_f a,
+     apps.pay_people_groups ppg,
+     apps.hr_all_positions_f hap,
+     gl_code_combinations_kfv k
+WHERE     p.person_id = a.person_id
+      AND a.people_group_id = ppg.people_group_id
+      AND hap.position_id(+) = a.position_id
+      and k.code_combination_id = a.default_code_comb_id
+      and p.employee_number in (:ADDITION_DIST.ASSIGNED_TO_NUMBER))

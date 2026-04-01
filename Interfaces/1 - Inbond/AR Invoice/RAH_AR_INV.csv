@@ -1,0 +1,6 @@
+batch_source_name,bill_to_cust_name,cust_trx_type_name,line_number,item_name,quantity,unit_selling_price,line_type,unique_key
+VISION BUILD,A. C. Networks,Invoice,1,SMC2400,1,500,LINE,RAH_AR_INV1
+Manual,Department of Defense,Invoice,1,Vision,2,20000,LINE,RAH_AR_INV2
+OKS_CONTRACTS,Total Internet,Invoice,1,Hart High Back Chairs,10,100,LINE,RAH_AR_INV3
+Trade Management Clai,Department of Defense,Invoice,1,Ford Chassis,2,12000,LINE,RAH_AR_INV5
+Work Order Billing (OLD),Total Intern,Invoice,1,Seminar-kit,3,500,LINE,RAH_AR_INV6

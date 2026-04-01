@@ -1,0 +1,11 @@
+--IN GENERAL---------------------------------------
+What exactly API means?
+API is the acronym for application programming interface — a software intermediary 
+that allows two applications to talk to each other.
+
+--IN Oracle----------------------------------------
+Application programming interfaces (APIs) :
+Oracle Applications use APIs to insert and update data in Oracle Applications.
+APIs are stored procedures that enable you to insert and update and retrive data in 
+Oracle Applications.For example, by using APIs, you can insert a customer record in 
+Oracle Applications. 

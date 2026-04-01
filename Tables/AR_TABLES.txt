@@ -1,0 +1,85 @@
+Oracle Apps Receivables (AR) Tables
+		
+		
+ 
+-----------------------------------------------------------Transactions---------------------------------------------------------------------------------------- 	
+
+
+
+RA_CUSTOMER_TRX_ALL 	        Transaction Header table
+
+RA_CUSTOMER_TRX_LINES_ALL    	Transaction Lines table along with Tax lines.
+
+RA_CUST_TRX_LINE_GL_DIST_ALL 	Distribution for Transaction Lines
+
+RA_CUST_TRX_LINE_SALESREPS_ALL 	Salesrep information for Transaction Lines
+
+	
+-------------------------------------------------------Transaction Interface Tables --------------------------------------------------------------------------	
+
+
+
+RA_INTERFACE_LINES_ALL        	Transaction Lines interface
+
+RA_INTERFACE_SALESCREDITS_ALL 	Transaction Sales credit information
+
+RA_INTERFACE_DISTRIBUTIONS_ALL 	Transaction Distribution information
+
+RA_INTERFACE_ERRORS_ALL 	    Transaction errors table
+
+AR_PAYMENTS_INTERFACE_ALL 	    Interface table to import receipt
+s
+AR_INTERIM_CASH_RECEIPTS_ALL 	Lockbox transfers the receipts that pass validation to the interim tables
+
+AR_INTERIM_CASH_RCPT_LINES_ALL 	Lockbox transfers the receipts that pass validation to the interim tables
+
+
+
+	
+------------------------------------------------------Receipts tables-----------------------------------------------------------------------------------	
+
+
+
+AR_CASH_RECEIPTS_ALL            	Cash Receipt Header tables
+
+AR_RECEIVABLE_APPLICATIONS_ALL   	stores Receipt Application details
+
+AR_PAYMENT_SCHEDULES_ALL        	This table is updated when an activity occurs against an invoice, debit memo, chargeback, credit memo, on-account credit, bills receivable
+
+AR_CASH_RECEIPT_HISTORY_ALL 	    This table stores all of the activity that is contained for the life cycle of a receipt.
+
+
+• Each row represents one step.
+• The status field for that row tells you which step the receipt has reached.
+• Possible statuses are Approved, Confirmed, Remitted, Cleared, and Reversed.
+
+
+
+	
+-----------------------------------------------------Customer Tables---------------------------------------------------------------------------------- 	 
+
+
+
+HZ_PARTIES                  	A party is an entity that can enter into a business relationship.
+
+HZ_CUST_ACCOUNTS            	This table stores information about customer/financial relationships established between a Party and the deploying company.
+
+HZ_PARTY_SITES   	            This table links a party (HZ_PARTIES) and a location (HZ_LOCATIONS) and stores location-Specific party information such as a person’s mail stops at their work address.
+
+HZ_CUST_ACCT_SITES_ALL      	This table stores information about customer/financial account sites information.
+
+HZ_CUST_SITE_USES_ALL        	This table stores information about the business purposes assigned to a customer account site
+
+HZ_LOCATIONS 	                A location is a point in geographical space described by an address and/or geographical Indicators such as latitude or longitude.
+
+	
+	
+--------------------------------------------------------Setup tables-------------------------------------------------------------------------------- 	
+
+
+
+RA_CUST_TRX_TYPES_ALL       	This table stores information about each transaction type for all classes of transactions, for example, invoices, commitments, and credit memos.
+
+AR_RECEIPT_CLASSES          	This table stores the different receipt classes that you define.
+
+AR_RECEIPT_METHODS          	This table stores information about Payment Methods, receipt attributes that you define and assign to Receipt Classes to account for receipts and their applications

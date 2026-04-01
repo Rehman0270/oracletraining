@@ -1,0 +1,1 @@
+frmcmp_batch userid=apps/apps module=/u02/oracle/VIS/fs1/EBSapps/appl/au/12.0.0/forms/US/RRR.fmb output_file=/u02/oracle/VIS/fs1/EBSapps/appl/au/12.0.0/forms/US/RRR.fmx module_type=form

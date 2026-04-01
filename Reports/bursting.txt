@@ -1,0 +1,17 @@
+SELECT
+     key_value key,                                   -- Split by                                                    
+    '1st Report'template,                -- Report or Template name                                                    
+    'en-US' locale,                                         -- English Language                                                              
+    'PDF' output_format,                                  -- PDF,EXCEL,RTF,CSV,HTML,XSL                                                     
+    'EMAIL' del_channel,                                    -- MAIL,FAX,FTP,FILE,PRINT,SFTP
+    'KEY_VALUE' || '.pdf' output_name,                     -- File output name
+    'mailto:rehman0270@gmail.com' parameter1,                          -- TO Emial
+    'mailto:mrvardhan@btranz.in' parameter2,                            --  cc (to whom you wanna show this report)
+    'mailto:syedasad6281@gmail.com' parameter3,                       -- From Mail
+    'Employee Details Reports' parameter4,                  -- Mail Subject
+    'Please Find the attached Document' parameter5,         -- Mail Body
+    'true' parameter6
+FROM
+    (
+       select 'SINGLE' key_value from ap_invoices_all where  invoice_id = nvl(:inv_id,invoice_id) and vendor_id  = nvl(:ven_id,vendor_id  )
+    ))

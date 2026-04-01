@@ -1,0 +1,27 @@
+In the context of Oracle Forms, customization and personalization are terms that refer to different aspects of tailoring the user interface and behavior of forms applications. Here's a brief explanation of the difference between customization and personalization in Oracle Forms:
+
+
+
+    Customization:
+        Definition: Customization involves making changes to the structure or functionality of Oracle Forms applications to meet specific business requirements.
+
+        Scope: Customizations are often broader in scope and may involve modifying the underlying code, adding new features, or altering the default behavior of the forms.
+
+        Development: Customizations typically require development skills, and changes are usually made by developers who have access to the source code of the forms.
+
+        Examples: Examples of customization include adding new fields, modifying validation logic, or integrating additional functionality into the forms application.
+
+
+
+    Personalization:
+        Definition: Personalization, on the other hand, focuses on tailoring the user interface and user experience for individual users without modifying the underlying code.
+
+        Scope: Personalizations are usually more user-centric and can involve changes to the layout, appearance, or behavior of forms at the user level.
+
+        User Involvement: Personalizations are often performed by end-users or administrators without requiring deep programming knowledge. Users can customize their own views without affecting the global application.
+
+        Examples: Examples of personalization include rearranging form elements, setting default values for fields, or hiding/displaying specific components based on user preferences.
+
+
+
+In Oracle Forms, both customization and personalization can be important for creating a tailored and efficient user experience. Customizations are typically carried out by developers during the application development phase, while personalizations allow end-users or administrators to adapt the application to their specific needs without directly modifying the source code. This separation between customization and personalization helps maintain a balance between flexibility and control over the application's behavior and appearance.

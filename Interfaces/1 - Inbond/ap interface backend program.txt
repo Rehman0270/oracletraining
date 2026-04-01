@@ -1,0 +1,300 @@
+DECLARE
+  l_po_number             po_headers.segment1%TYPE;
+  l_payment_method_code   ap_invoices_all.payment_method_code%TYPE := :payment_method_code;
+  l_org_id                NUMBER := :p_org_id;
+  l_vendor_id             po_headers.vendor_id%TYPE;
+  l_vendor_site_id        po_headers.vendor_site_id%TYPE;
+  l_invoice_id            ap_invoices_all.invoice_id%TYPE;
+  v_request_id            NUMBER;
+  l_boolean               BOOLEAN;
+  l_phase                 VARCHAR2 (200);
+  l_status                VARCHAR2 (200);
+  l_dev_phase             VARCHAR2 (200);
+  l_dev_status            VARCHAR2 (200);
+  l_message               VARCHAR2 (200);
+  g_invalid_ex            EXCEPTION;
+  l_error_seq             VARCHAR2 (200);
+  l_error_msg             VARCHAR2 (4000);
+BEGIN
+  l_po_number := :p_po_number;
+  l_payment_method_code := :payment_method_code;
+  l_org_id := :p_org_id;
+  l_invoice_id := ap_invoices_interface_s.nextval;
+
+  BEGIN
+    SELECT poh.vendor_id, poh.vendor_site_id
+    INTO   l_vendor_id, l_vendor_site_id
+    FROM   po_headers_ALL poh, po_lines_all pol
+    WHERE  poh.segment1 = l_po_number
+    AND    poh.po_header_id = pol.po_header_id;
+  EXCEPTION
+    WHEN OTHERS THEN
+      l_error_seq := '01';
+      l_error_msg := sqlerrm;
+      RAISE g_invalid_ex;
+  END;
+
+  BEGIN
+    INSERT INTO ap_invoices_interface (invoice_id
+                                      ,invoice_num
+                                      ,vendor_id
+                                      ,vendor_site_id
+                                      ,invoice_amount
+                                      ,invoice_currency_code
+                                      ,invoice_date
+                                      ,description
+                                      ,source
+                                      ,org_id
+                                      ,payment_method_code)
+    VALUES      (l_invoice_id
+                ,'PRODUCT1'
+                ,l_vendor_id
+                ,l_vendor_site_id
+                ,200
+                ,'USD'
+                ,to_date ('05-FEB-2022', 'dd-mon-yyyy')
+                ,'This Invoice is created by 1318'
+                ,'MANUAL INVOICE ENTRY'
+                ,l_org_id
+                ,l_payment_method_code);
+  END;
+
+  BEGIN
+    INSERT INTO ap_invoice_lines_interface (invoice_id
+                                           ,line_number
+                                           ,line_type_lookup_code
+                                           ,amount)
+    VALUES      (l_invoice_id
+                ,1
+                ,'ITEM'
+                ,200);
+  END;
+
+  COMMIT;
+
+  BEGIN
+    mo_global.init ('SQLAP');
+    fnd_global.apps_initialize (user_id => 1318, resp_id => 50554, resp_appl_id => 200);
+    --    fnd_request.set_org_id (204);
+    --    mo_global.set_policy_context ('S', 204);
+
+    v_request_id :=
+      fnd_request.submit_request (application   => 'SQLAP'
+                                 ,program       => 'APXIIMPT'
+                                 ,description   => ''
+                                 ,start_time    => NULL
+                                 ,sub_request   => FALSE
+                                 ,argument1     => 204
+                                 ,argument2     => 'MANUAL INVOICE ENTRY'
+                                 ,argument3     => NULL
+                                 ,argument4     => NULL
+                                 ,argument5     => NULL
+                                 ,argument6     => NULL
+                                 ,argument7     => NULL
+                                 ,argument8     => 'N'
+                                 ,argument9     => 'Y');
+    COMMIT;
+
+    IF v_request_id > 0 THEN
+      l_boolean :=
+        fnd_concurrent.wait_for_request (v_request_id
+                                        ,20
+                                        ,0
+                                        ,l_phase
+                                        ,l_status
+                                        ,l_dev_phase
+                                        ,l_dev_status
+                                        ,l_message);
+    END IF;
+
+    dbms_output.put_line ('********************************');
+
+    IF (l_status = 'Normal') THEN
+      dbms_output.put_line ('Invoice Created Successfully, Please see the output of Payables OPEN Invoice Import program request id :' || v_request_id);
+    ELSE
+      l_error_seq := '02';
+      l_error_msg := 'Payable Open Ivoice Pogram failed you can see the log from the application for the following reqiest id :' || v_request_id;
+      RAISE g_invalid_ex;
+    END IF;
+  END;
+
+  dbms_output.put_line ('********************************');
+EXCEPTION
+  WHEN g_invalid_ex THEN
+    dbms_output.put_line ('l_error_seq = ' || l_error_seq);
+    dbms_output.put_line ('l_error_msg = ' || l_error_msg);
+  WHEN OTHERS THEN
+    dbms_output.put_line ('Error :' || sqlerrm);
+END; -------BACK END RUN PROGRAM
+/
+declare 
+cursor c1 is select * from inv;
+V_INVNUM VARCHAR(30);
+v_flag VARCHAR(20);
+v_tax number;
+ven_site_id number;
+po_num VARCHAR(20);
+v_amount number;
+ven_id number(20);
+ven_site number(20);
+v_terms number(20);
+v_poheade number;
+v_poline number(20);
+v_poll NUMBER(20);
+v_orgid number(20);
+v_source varchar(20);
+v_pdd number;
+begin
+v_flag:='S';
+FOR i IN C1 LOOP
+--po_num
+if i.PO_NUMBER is not null then
+begin
+select DISTINCT segment1 into po_num from PO_HEADERS where segment1=i.PO_NUMBER;
+exception
+when others then v_flag:= 'F';
+DBMS_OUTPUT.PUT_LINE(po_num||'po_num IS ERROR'||sqlerrm);
+end;
+end if;
+--vendor_id
+if i.vendor_id is not null then
+begin 
+select vendor_id into ven_id from po_vendors where vendor_id = i.vendor_id;
+exception
+when others then v_flag:= 'F';
+DBMS_OUTPUT.PUT_LINE(ven_id||'ven_id IS ERROR');
+end;
+end if;
+
+if i.vendor_site_id is not null then
+begin 
+select vendor_site_id into ven_site_id from PO_VENDOR_SITES where vendor_site_id = i.vendor_site_id;
+exception
+when others then v_flag:= 'F';
+DBMS_OUTPUT.PUT_LINE(ven_site_id||'ven_site_id IS ERROR');
+end;
+end if;
+
+if i.TERMS_ID is not null then
+begin 
+select TERM_ID into v_terms from AP_TERMS where TERM_ID = i.TERMS_ID;
+exception
+when others then v_flag:= 'F';
+DBMS_OUTPUT.PUT_LINE(v_terms||'TERMS_ID IS ERROR');
+end;
+end if;
+
+
+
+
+
+--tax
+if i.po_header_id is not null then
+begin
+--source 
+SELECT PO_HEADER_ID into v_poheade
+  FROM PO_HEADERS
+ WHERE  PO_HEADER_ID=i.PO_HEADER_ID;
+exception
+when others then v_flag:= 'F';
+DBMS_OUTPUT.PUT_LINE(v_poheade||'PO_HEADER_ID IS ERROR'||sqlerrm);
+end;
+end if;
+
+if i.po_line_id is not null then
+begin
+SELECT po_line_id into v_poline
+  FROM PO_LINES
+ WHERE  po_line_id=i.po_line_id;
+EXCEPTION
+when others then v_flag:= 'F';
+DBMS_OUTPUT.PUT_LINE(v_poline||'po_line_id IS ERROR'||sqlerrm);
+end;
+end if;
+
+if i.PO_LINE_LOCATION_ID is not null then
+begin
+SELECT LINE_LOCATION_ID into v_poll
+  FROM PO_LINE_LOCATIONS
+ WHERE  LINE_LOCATION_ID=i.PO_LINE_LOCATION_ID;
+exception
+when others then v_flag:= 'F';
+DBMS_OUTPUT.PUT_LINE(v_poll||'PO_LINE_LOCATION_ID IS ERROR'||sqlerrm);
+end;
+end if;
+
+if i.PO_DISTRIBUTION_ID is not null then
+begin
+SELECT PO_DISTRIBUTION_ID into v_pdd
+  FROM PO_DISTRIBUTIONS
+ WHERE  PO_DISTRIBUTION_ID=i.PO_DISTRIBUTION_ID;
+exception
+when others then v_flag:= 'F';
+DBMS_OUTPUT.PUT_LINE(v_pdd||'v_pdd IS ERROR'||sqlerrm);
+end;
+end if;
+
+UPDATE INV  SET FLAG = v_flag WHERE SEQ = I.SEQ;
+if  v_flag ='S'and i.seq=1 then
+insert into AP_INVOICES_INTERFACE
+(LAST_UPDATED_BY,LAST_UPDATE_DATE,PAYMENT_CURRENCY_CODE,PAYMENT_CROSS_RATE,GL_DATE,INVOICE_CURRENCY_CODE,INVOICE_ID,INVOICE_NUM,VENDOR_ID,VENDOR_SITE_ID,INVOICE_AMOUNT,ORG_ID,SOURCE,PAYMENT_METHOD_LOOKUP_CODE,PAY_GROUP_LOOKUP_CODE,INVOICE_DATE,terms_id,terms_date)          
+values
+(1318,sysdate,'USD',1,sysdate,'USD',AP_INVOICES_INTERFACE_S.NEXTVAL,'PRODUCT1',ven_id,i.vendor_site_id,i.INVOICE_AMOUNT,204,'MANUAL INVOICE ENTRY','CHECK','Standard',sysdate,v_terms,sysdate);
+end if;
+if v_flag ='S'  then
+insert into AP_INVOICE_LINES_INTERFACE
+(po_SHIPMENT_NUM,description,po_header_id,po_line_id,po_line_location_id,PO_DISTRIBUTION_ID,UNIT_OF_MEAS_LOOKUP_CODE,LAST_UPDATED_BY,LAST_UPDATE_DATE,ACCOUNTING_DATE,INVOICE_LINE_ID,INVOICE_ID,line_number,LINE_TYPE_LOOKUP_CODE,AMOUNT,ASSETS_TRACKING_FLAG,DIST_CODE_COMBINATION_ID)                                              
+values 
+(1,'ITEM 1',v_poheade,v_poline,v_poll,v_pdd,'EACH',1318,sysdate,to_date('21-Feb-2021','dd-mon-yyyy'),AP_INVOICE_LINES_INTERFACE_S.NEXTVAL,AP_INVOICES_INTERFACE_S.currval,i.seq,i.LINE_TYPE_LOOKUP_CODE,i.AMOUNT,'N',13777);   
+end if;
+
+END LOOP;
+END;
+--backend
+DECLARE
+ln_responsibility_id 	NUMBER;
+ln_application_id    	NUMBER;
+ln_user_id           	NUMBER;
+ln_request_id           NUMBER;
+BEGIN
+ 
+  SELECT DISTINCT fr.responsibility_id,
+                  frx.application_id
+             INTO ln_responsibility_id,
+                  ln_application_id
+             FROM apps.fnd_responsibility frx,
+                  apps.fnd_responsibility_tl fr
+            WHERE fr.responsibility_id = frx.responsibility_id
+        AND UPPER (fr.responsibility_name) LIKE UPPER('Payables, Vision Operations (USA)');
+ 
+   SELECT user_id INTO ln_user_id FROM fnd_user WHERE user_name = 'OPERATIONS';
+ 
+  --To setup environment.
+ 
+  apps.fnd_global.apps_initialize (ln_user_id,ln_responsibility_id,ln_application_id);
+ 
+  --Submitting Concurrent Request
+ 
+  ln_request_id := fnd_request.submit_request ( 
+                            application   => 'SQLAP', 
+                            program       => 'STG', 
+                            description   => 'Concurrent Program Name', 
+                            start_time    => sysdate, 
+                            sub_request   => FALSE
+--			    argument1     => 'PARAMETER_VALUE' --(if applicable)
+  );
+ 
+  COMMIT;
+ 
+  IF ln_request_id = 0
+  THEN
+     dbms_output.put_line ('Concurrent request failed to submit');
+  ELSE
+     dbms_output.put_line('Successfully Submitted the Concurrent Request');
+  END IF;
+ 
+EXCEPTION
+WHEN OTHERS THEN
+  dbms_output.put_line('Error While Submitting Concurrent Request '
+                        ||TO_CHAR(SQLCODE)||'-'||sqlerrm);
+END;

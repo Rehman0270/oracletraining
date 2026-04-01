@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="WINDOWS-1252" ?>
+<dataTemplate name ="R222" description="Invoice Detail Report" Version="1.0" >
+<parameters>
+<parameter name="p_deptno" dataType="number"/> 
+</parameters>
+<dataQuery>
+<sqlStatement name="Q1">
+<![CDATA[
+SELECT
+    empno          empno,
+    ename          ename,
+    job            job,
+    mgr            mgr,
+    hiredate       hiredate,
+    sal            sal,
+    comm           comm,
+    deptno         deptno,
+    gender         gender,
+    phone_number   phone_number,
+    status         status
+FROM
+    emp
+WHERE
+    deptno = :p_deptno
+	
+	]]>
+</sqlStatement>
+</dataQuery> 
+<dataStructure>
+<group name="G_1" source="Q1">
+    <element name="empno"      value="empno" />
+	<element name="ename"      value="ename" />
+	<element name="job"      value="job" />
+	<element name="mgr"      value="mgr" />
+	<element name="hiredate"      value="hiredate" />
+	<element name="sal"      value="sal" />
+	<element name="comm"      value="comm" />
+	<element name="deptno"      value="deptno" />
+	<element name="gender"      value="gender" />
+	<element name="phone_number"   value="phone_number" />
+	<element name="status"      value="status" />
+</group>
+</dataStructure>
+</dataTemplate>	
